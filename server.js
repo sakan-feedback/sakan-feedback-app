@@ -22,7 +22,35 @@ const createTable = async () => {
   `);
   console.log("Table ready ✅");
 };
+<div class="box">
+  <h2>Feedback</h2>
 
+  <input id="name" placeholder="Name">
+  <input id="location" placeholder="Location">
+  <textarea id="comments" placeholder="Comments"></textarea>
+
+  <button onclick="send()">Send</button>
+</div>
+
+<script>
+async function send() {
+  const data = {
+    name: document.getElementById("name").value,
+    location: document.getElementById("location").value,
+    comments: document.getElementById("comments").value
+  };
+
+  await fetch("https://sakan-feedback-app.onrender.com/feedback", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  alert("Saved ✅");
+}
+</script>
 createTable();
 app.get("/", (req, res) => {
   res.send("SAKAN Feedback System is Running ✅");
