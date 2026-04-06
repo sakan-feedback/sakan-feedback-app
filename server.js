@@ -10,7 +10,22 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
+const users = [
+  { username: "admin", password: "1234" }
+];
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
 
+  const user = users.find(u => 
+    u.username === username && u.password === password
+  );
+
+  if (user) {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false });
+  }
+});
 // test
 app.get("/", (req, res) => {
   res.send("SAKAN Feedback System is Running ✅");
