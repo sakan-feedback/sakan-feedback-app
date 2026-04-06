@@ -35,3 +35,15 @@ app.get("/feedback", async (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running"));
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "1234";
+
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === ADMIN_USER && password === ADMIN_PASS) {
+    res.json({ success: true });
+  } else {
+    res.json({ success: false });
+  }
+});
