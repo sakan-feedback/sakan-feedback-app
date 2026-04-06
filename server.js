@@ -10,7 +10,20 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
+const createTable = async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS feedback (
+      id SERIAL PRIMARY KEY,
+      name TEXT,
+      location TEXT,
+      comments TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+  console.log("Table ready ✅");
+};
 
+createTable();
 app.get("/", (req, res) => {
   res.send("SAKAN Feedback System is Running ✅");
 });
