@@ -122,3 +122,66 @@ app.get("/admin", async (req, res) => {
 
   res.send(html);
 });
+<!-- زر -->
+<button onclick="openForm()" style="
+  background:#6c2bd9;
+  color:white;
+  padding:12px 25px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+">
+  Send Feedback
+</button>
+
+<!-- Popup -->
+<div id="feedbackModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+">
+
+  <div style="
+    background:white;
+    width:90%;
+    max-width:600px;
+    border-radius:12px;
+    overflow:hidden;
+    position:relative;
+  ">
+
+    <!-- زر إغلاق -->
+    <span onclick="closeForm()" style="
+      position:absolute;
+      top:10px;
+      right:15px;
+      cursor:pointer;
+      font-size:20px;
+    ">✖</span>
+
+    <!-- الفورم داخل iframe -->
+    <iframe 
+      src="https://sakan-feedback-app.onrender.com"
+      width="100%" 
+      height="500"
+      style="border:none;">
+    </iframe>
+
+  </div>
+</div>
+
+<script>
+function openForm() {
+  document.getElementById("feedbackModal").style.display = "flex";
+}
+
+function closeForm() {
+  document.getElementById("feedbackModal").style.display = "none";
+}
+</script>
