@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+</head>
+
+<body style="text-align:center; margin-top:100px;">
+
+<h2>Admin Login</h2>
+
+<input id="user" placeholder="Username"><br><br>
+<input id="pass" type="password" placeholder="Password"><br><br>
+
+<button onclick="login()">Login</button>
+
+<script>
+async function login() {
+  const res = await fetch("https://sakan-feedback-app.onrender.com/login", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      username: user.value,
+      password: pass.value
+    })
+  });
+
+  const data = await res.json();
+
+  if(data.success){
+    window.location = "admin.html";
+  } else {
+    alert("Wrong login");
+  }
+}
+<button onclick="login()">Login</button>
+
+<script>
+function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  if (username === "admin" && password === "1234") {
+    window.location.href = "admin.html";
+  } else {
+    alert("Wrong login!");
+  }
+}
+</script>
+
+</body>
+</html>
