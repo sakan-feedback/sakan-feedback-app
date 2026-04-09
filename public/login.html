@@ -19,30 +19,18 @@ async function login() {
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body: JSON.stringify({
-      username: user.value,
-      password: pass.value
+      username: document.getElementById("user").value,
+      password: document.getElementById("pass").value
     })
   });
 
   const data = await res.json();
 
   if(data.success){
+    localStorage.setItem("loggedIn", "true"); // ✅ مهم جداً
     window.location = "admin.html";
   } else {
     alert("Wrong login");
-  }
-}
-<button onclick="login()">Login</button>
-
-<script>
-function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
-  if (username === "admin" && password === "1234") {
-    window.location.href = "admin.html";
-  } else {
-    alert("Wrong login!");
   }
 }
 </script>
