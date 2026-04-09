@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+
+<button onclick="logout()">Logout</button>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAKAN Dashboard Pro</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+if (localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "login.html";
+}
+</script>
+<style>
+<script>
+
+function logout() {
+  localStorage.removeItem("loggedIn");
+  window.location.href = "login.html";
+}
+</script>
+<script>
+async function loadData() {
+  const res = await fetch("https://sakan-feedback-app.onrender.com/feedback");
+  const data = await res.json();
+
+  const table = document.getElementById("data");
+
+  data.forEach(item => {
+    table.innerHTML += `
+      <tr>
+        <td>${item.id}</td>
+        <td>${item.name}</td>
+        <td>${item.location}</td>
+        <td>${item.comments}</td>
+      </tr>
+    `;
+  });
+}
+
+loadData();
+</script>
+
+body {
+  margin: 0;
+  font-family: "Segoe UI";
+  background: #f4f6f9;
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #2b5dab;
+  color: white;
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar img {
+  width: 120px;
+  background: white;
+  padding: 8px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #16a34a;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Cards */
+.cards {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.card p {
+  font-size: 22px;
+  color: #16a34a;
+}
+
+/* Table */
+table {
+  width: 100%;
+  background: white;
+  border-collapse: collapse;
+  border-radius: 12px;
+}
+
+th {
+  background: #2b5dab;
+  color: white;
+  padding: 10px;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+tr:hover {
+  background: #f0fdf4;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
+
+  <a class="active" onclick="showPage('dashboard', this)">Dashboard</a>
+  <a onclick="showPage('feedback', this)">Feedback</a>
+  <a onclick="showPage('reports', this)">Reports</a>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+<!-- Dashboard -->
+<div id="dashboardPage">
+  <h2>📊 SAKAN Dashboard</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3>عدد الطلبات</h3>
+      <p id="total">0</p>
+    </div>
+
+    <div class="card">
+      <h3>آخر موقع</h3>
+      <p id="lastLocation">-</p>
+    </div>
+  </div>
+
+  <canvas id="chart" height="100"></canvas>
+</div>
+
+<!-- Feedback -->
+<div id="feedbackPage" style="display:none;">
+  <h2>📋 جميع الشكاوى</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>الاسم</th>
+        <th>الموقع</th>
+        <th>التعليق</th>
+        <th>التاريخ</th>
+      </tr>
+    </thead>
+    <tbody id="data"></tbody>
+  </table>
+</div>
+
+<!-- Reports -->
+<div id="reportsPage" style="display:none;">
+  <h2>📊 التقارير</h2>
+  <p>سيتم إضافة التقارير قريبًا...</p>
+</div>
+
+</div>
+
+<script>
+let allData = [];
+
+// تحميل البيانات
+async function loadData() {
+  const res = await fetch("https://sakan-feedback-app.onrender.com/feedback");
+  const data = await res.json();
+
+  allData = data;
+  displayData(data);
+
+  document.getElementById("total").innerText = data.length;
+  document.getElementById("lastLocation").innerText = data[0]?.location || "-";
+
+  generateChart(data);
+}
+
+// عرض الجدول
+function displayData(data) {
+  const table = document.getElementById("data");
+  table.innerHTML = "";
+
+  data.forEach(item => {
+    table.innerHTML += `
+      <tr>
+        <td>${item.id}</td>
+        <td>${item.name}</td>
+        <td>${item.location}</td>
+        <td>${item.comments}</td>
+        <td>${item.created_at || "-"}</td>
+      </tr>
+    `;
+  });
+}
+
+// الرسم البياني
+function generateChart(data) {
+  const locations = {};
+
+  data.forEach(item => {
+    locations[item.location] = (locations[item.location] || 0) + 1;
+  });
+
+  new Chart(document.getElementById("chart"), {
+    type: "bar",
+    data: {
+      labels: Object.keys(locations),
+      datasets: [{
+        label: "عدد الشكاوى",
+        data: Object.values(locations),
+        backgroundColor: "#16a34a"
+      }]
+    }
+  });
+}
+
+// التنقل
+function showPage(page, el) {
+  document.getElementById("dashboardPage").style.display = "none";
+  document.getElementById("feedbackPage").style.display = "none";
+  document.getElementById("reportsPage").style.display = "none";
+
+  document.querySelectorAll(".sidebar a").forEach(link => link.classList.remove("active"));
+  el.classList.add("active");
+
+  if (page === "dashboard") document.getElementById("dashboardPage").style.display = "block";
+  if (page === "feedback") document.getElementById("feedbackPage").style.display = "block";
+  if (page === "reports") document.getElementById("reportsPage").style.display = "block";
+}
+
+loadData();
+</script>
+
+</body>
+</html>
