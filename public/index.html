@@ -3,193 +3,338 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAKAN Feedback</title>
+<title>SAKAN Dashboard Pro</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 body {
-  font-family: "Segoe UI", Tahoma;
-  background: #f5f5f5;
+  margin: 0;
+  font-family: "Segoe UI";
+  background: #f4f6f9;
   display: flex;
-  justify-content: center;
-  padding: 30px;
 }
 
-.container {
-  background: white;
-  width: 600px;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #2b5dab;
+  color: white;
+  height: 100vh;
+  position: fixed;
+  padding: 20px;
 }
 
-.logo {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.logo img {
+.sidebar img {
   width: 120px;
   background: white;
   padding: 8px;
   border-radius: 10px;
+  margin-bottom: 30px;
 }
 
-h2 {
-  text-align: center;
-  color: #2b5dab;
+.sidebar a {
+  display: block;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #16a34a;
+}
+
+/* Main */
+.main {
+  margin-left: 240px;
+  width: 100%;
+}
+
+/* Header */
+.header {
+  background: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logout {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Content */
+.content {
+  padding: 20px;
+}
+
+/* Cards */
+.cards {
+  display: flex;
+  gap: 20px;
   margin-bottom: 20px;
 }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 10px;
+.card {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
 }
 
-.required {
-  color: red;
+.card p {
+  font-size: 26px;
+  color: #16a34a;
 }
 
-input, select, textarea {
+/* Table */
+table {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  background: white;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-textarea {
-  height: 100px;
-}
-
-button {
-  margin-top: 20px;
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(to right, #16a34a, #2b5dab);
+th {
+  background: #2b5dab;
   color: white;
-  border: none;
+  padding: 12px;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+tr:hover {
+  background: #f0fdf4;
+}
+
+/* Notification */
+#notif {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #16a34a;
+  color: white;
+  padding: 12px 20px;
   border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-.lang-switch {
-  text-align: right;
-  margin-bottom: 10px;
-  cursor: pointer;
-  color: #2b5dab;
+  display: none;
+  z-index: 999;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- إشعار -->
+<div id="notif">New Feedback Received 🚀</div>
 
-<div class="lang-switch" onclick="toggleLang()">🌐 EN / AR</div>
-
-<div class="logo">
+<!-- Sidebar -->
+<div class="sidebar">
   <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
+
+  <a class="active" onclick="showPage('dashboard', this)">Dashboard</a>
+  <a onclick="showPage('feedback', this)">Feedback</a>
+  <a onclick="showPage('reports', this)">Reports</a>
 </div>
 
-<h2 id="title">استمارة الاقتراحات والشكاوي</h2>
+<!-- Main -->
+<div class="main">
 
-<!-- ✅ الفورم الصحيح -->
-<form onsubmit="send(event)">
+<!-- Header -->
+<div class="header">
+  <h2>📊 SAKAN Dashboard</h2>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
 
-<label id="categoryLabel">1. الفئة <span class="required">*</span></label>
-<select id="category" required>
-  <option value="">اختر مستوى الأهمية</option>
-  <option>منخفض</option>
-  <option>متوسط</option>
-  <option>عالي</option>
-</select>
+<div class="content">
 
-<label id="typeLabel">2. نوع المشكلة <span class="required">*</span></label>
-<select id="type" required>
-  <option value="">اختر نوع المشكلة</option>
-  <option>شكوى</option>
-  <option>اقتراح</option>
-</select>
+<!-- Dashboard -->
+<div id="dashboardPage">
+  <div class="cards">
+    <div class="card">
+      <h3>عدد الطلبات</h3>
+      <p id="total">0</p>
+    </div>
 
-<label id="descLabel">3. وصف المشكلة <span class="required">*</span></label>
-<textarea id="comments" placeholder="صف المشكلة بالتفصيل..." required></textarea>
+    <div class="card">
+      <h3>آخر موقع</h3>
+      <p id="lastLocation">-</p>
+    </div>
+  </div>
 
-<label id="locationLabel">الموقع / القسم (اختياري)</label>
-<input id="location" placeholder="أدخل الموقع أو القسم">
+  <canvas id="chart"></canvas>
+</div>
 
-<h3 id="contactTitle">4. معلومات التواصل</h3>
+<!-- Feedback -->
+<div id="feedbackPage" style="display:none;">
+  <h2>📋 جميع الشكاوى</h2>
 
-<label id="nameLabel">الاسم <span class="required">*</span></label>
-<input id="name" placeholder="الاسم" required>
+  <!-- زر Excel -->
+  <button onclick="exportExcel()" style="margin-bottom:10px; background:#16a34a; color:white; border:none; padding:10px 15px; border-radius:6px;">
+    📥 Export Excel
+  </button>
 
-<label id="phoneLabel">رقم الهاتف <span class="required">*</span></label>
-<input id="phone" placeholder="رقم الهاتف" required>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>الاسم</th>
+        <th>الموقع</th>
+        <th>التعليق</th>
+        <th>التاريخ</th>
+      </tr>
+    </thead>
+    <tbody id="data"></tbody>
+  </table>
+</div>
 
-<label id="roomLabel">رقم الغرفة (اختياري)</label>
-<input id="room" placeholder="رقم الغرفة">
+<!-- Reports -->
+<div id="reportsPage" style="display:none;">
+  <h2>📊 التقارير</h2>
+  <p>قريباً...</p>
+</div>
 
-<label id="emailLabel">البريد الإلكتروني (اختياري)</label>
-<input id="email" placeholder="البريد الإلكتروني">
-
-<label id="empLabel">الرقم الوظيفي (اختياري)</label>
-<input id="emp" placeholder="الرقم الوظيفي">
-
-<button type="submit" id="submitBtn">إرسال البلاغ</button>
-
-</form>
-
+</div>
 </div>
 
 <script>
-let isArabic = true;
-
-function toggleLang() {
-  isArabic = !isArabic;
-
-  if (!isArabic) {
-    document.body.dir = "ltr";
-    title.innerText = "Feedback Form";
-    categoryLabel.innerText = "1. Category *";
-    typeLabel.innerText = "2. Type *";
-    descLabel.innerText = "3. Description *";
-    locationLabel.innerText = "Location / Department (Optional)";
-    contactTitle.innerText = "4. Contact Information";
-    nameLabel.innerText = "Name *";
-    phoneLabel.innerText = "Phone Number *";
-    roomLabel.innerText = "Room Number (Optional)";
-    emailLabel.innerText = "Email (Optional)";
-    empLabel.innerText = "Employee ID (Optional)";
-    submitBtn.innerText = "Send Feedback";
-  } else {
-    location.reload();
-  }
+// حماية الصفحة
+if (localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "login.html";
 }
 
-// ✅ إرسال البيانات بشكل صحيح
-async function send(e) {
-  e.preventDefault();
+// Logout
+function logout() {
+  localStorage.removeItem("loggedIn");
+  window.location.href = "login.html";
+}
 
-  const data = {
-    name: document.getElementById("name").value,
-    location: document.getElementById("location").value,
-    comments: document.getElementById("comments").value
-  };
+let allData = [];
+let lastCount = 0;
 
-  await fetch("https://sakan-feedback-app.onrender.com/feedback", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+// تحميل البيانات
+async function loadData() {
+  const res = await fetch("https://sakan-feedback-app.onrender.com/feedback");
+  const data = await res.json();
+
+  allData = data;
+  displayData(data);
+
+  document.getElementById("total").innerText = data.length;
+  document.getElementById("lastLocation").innerText = data[0]?.location || "-";
+
+  generateChart(data);
+  lastCount = data.length;
+}
+
+// عرض الجدول
+function displayData(data) {
+  const table = document.getElementById("data");
+  table.innerHTML = "";
+
+  data.forEach(item => {
+    table.innerHTML += `
+      <tr>
+        <td>${item.id}</td>
+        <td>${item.name}</td>
+        <td>${item.location}</td>
+        <td>${item.comments}</td>
+        <td>${item.created_at || "-"}</td>
+      </tr>
+    `;
+  });
+}
+
+// Chart
+function generateChart(data) {
+  const locations = {};
+
+  data.forEach(item => {
+    locations[item.location] = (locations[item.location] || 0) + 1;
   });
 
-  alert("تم الإرسال بنجاح ✅");
-  document.querySelector("form").reset();
+  new Chart(document.getElementById("chart"), {
+    type: "bar",
+    data: {
+      labels: Object.keys(locations),
+      datasets: [{
+        label: "عدد الشكاوى",
+        data: Object.values(locations),
+        backgroundColor: "#16a34a"
+      }]
+    }
+  });
 }
+
+// Navigation
+function showPage(page, el) {
+  document.getElementById("dashboardPage").style.display = "none";
+  document.getElementById("feedbackPage").style.display = "none";
+  document.getElementById("reportsPage").style.display = "none";
+
+  document.querySelectorAll(".sidebar a").forEach(link => link.classList.remove("active"));
+  el.classList.add("active");
+
+  if (page === "dashboard") document.getElementById("dashboardPage").style.display = "block";
+  if (page === "feedback") document.getElementById("feedbackPage").style.display = "block";
+  if (page === "reports") document.getElementById("reportsPage").style.display = "block";
+}
+
+// Export Excel
+function exportExcel() {
+  let csv = "ID,Name,Location,Comments,Date\n";
+
+  allData.forEach(item => {
+    csv += `${item.id},${item.name},${item.location},${item.comments},${item.created_at}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "sakan-feedback.csv";
+  a.click();
+}
+
+// إشعارات
+async function checkNewFeedback() {
+  const res = await fetch("https://sakan-feedback-app.onrender.com/feedback");
+  const data = await res.json();
+
+  if (data.length > lastCount && lastCount !== 0) {
+    showNotification();
+  }
+
+  lastCount = data.length;
+}
+
+function showNotification() {
+  const notif = document.getElementById("notif");
+  notif.style.display = "block";
+
+  setTimeout(() => {
+    notif.style.display = "none";
+  }, 3000);
+}
+
+// كل 10 ثواني
+setInterval(checkNewFeedback, 10000);
+
+// تشغيل
+loadData();
 </script>
 
 </body>
