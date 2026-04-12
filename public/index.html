@@ -1,9 +1,9 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>  
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAKAN Feedback</title>
+<title>SAKAN Feedback - YIBAL</title>
 
 <style>
 body {
@@ -34,11 +34,11 @@ body {
   border-radius: 10px;
 }
 
-/* ✨ اسم الموقع */
+/* اسم الموقع */
 .site-name {
   text-align: center;
-  font-weight: bold;
   font-size: 18px;
+  font-weight: bold;
   color: #16a34a;
   margin-bottom: 5px;
 }
@@ -106,7 +106,7 @@ button:hover {
   <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
 </div>
 
-<!-- ✅ اسم الموقع -->
+<!-- اسم الموقع -->
 <div class="site-name" id="siteName">PDO YIBAL MOTEL</div>
 
 <h2 id="title">استمارة الاقتراحات والشكاوي</h2>
@@ -129,10 +129,10 @@ button:hover {
 </select>
 
 <label id="descLabel">3. وصف المشكلة <span class="required">*</span></label>
-<textarea id="comments" placeholder="صف المشكلة بالتفصيل..." required></textarea>
+<textarea id="comments" required></textarea>
 
 <label id="locationLabel">الموقع / القسم (اختياري)</label>
-<input id="location" placeholder="أدخل الموقع أو القسم">
+<input id="location">
 
 <h3 id="contactTitle">4. معلومات التواصل</h3>
 
@@ -160,9 +160,8 @@ button:hover {
 <script>
 let isArabic = true;
 
-// ✨ تغيير اسم الموقع هنا فقط لكل صفحة
-let siteArabic = "PDO YIBAL MOTEL";
-let siteEnglish = "PDO YIBAL MOTEL";
+const siteArabic = "PDO YIBAL MOTEL";
+const siteEnglish = "PDO YIBAL MOTEL";
 
 function toggleLang() {
   isArabic = !isArabic;
@@ -189,19 +188,21 @@ function toggleLang() {
   }
 }
 
-// إرسال
+// إرسال البيانات
 async function send(e) {
   e.preventDefault();
 
+  const data = {
+    name: name.value,
+    location: location.value,
+    comments: comments.value,
+    site: siteArabic // مهم جداً
+  };
+
   await fetch("https://sakan-feedback-app.onrender.com/feedback", {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      name: name.value,
-      location: location.value,
-      comments: comments.value,
-      site: siteArabic // 🔥 مهم لكل موقع
-    })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
   });
 
   alert("تم الإرسال بنجاح ✅");
