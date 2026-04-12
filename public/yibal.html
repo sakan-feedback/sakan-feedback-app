@@ -209,6 +209,24 @@ async function send(e) {
   document.querySelector("form").reset();
 }
 </script>
+<script>
+async function send(e) {
+  e.preventDefault();
 
+  await fetch("https://sakan-feedback-app.onrender.com/feedback", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: name.value,
+      location: location.value,
+      comments: comments.value,
+      site: "PDO YIBAL MOTEL"
+    })
+  });
+
+  alert("تم الإرسال بنجاح ✅");
+  document.querySelector("form").reset();
+}
+</script>
 </body>
 </html>
