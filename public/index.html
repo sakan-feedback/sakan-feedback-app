@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
@@ -32,6 +32,15 @@ body {
   background: white;
   padding: 8px;
   border-radius: 10px;
+}
+
+/* ✨ اسم الموقع */
+.site-name {
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: #16a34a;
+  margin-bottom: 5px;
 }
 
 h2 {
@@ -97,9 +106,11 @@ button:hover {
   <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
 </div>
 
+<!-- ✅ اسم الموقع -->
+<div class="site-name" id="siteName">PDO YIBAL MOTEL</div>
+
 <h2 id="title">استمارة الاقتراحات والشكاوي</h2>
 
-<!-- ✅ الفورم الصحيح -->
 <form onsubmit="send(event)">
 
 <label id="categoryLabel">1. الفئة <span class="required">*</span></label>
@@ -126,19 +137,19 @@ button:hover {
 <h3 id="contactTitle">4. معلومات التواصل</h3>
 
 <label id="nameLabel">الاسم <span class="required">*</span></label>
-<input id="name" placeholder="الاسم" required>
+<input id="name" required>
 
 <label id="phoneLabel">رقم الهاتف <span class="required">*</span></label>
-<input id="phone" placeholder="رقم الهاتف" required>
+<input id="phone" required>
 
 <label id="roomLabel">رقم الغرفة (اختياري)</label>
-<input id="room" placeholder="رقم الغرفة">
+<input id="room">
 
 <label id="emailLabel">البريد الإلكتروني (اختياري)</label>
-<input id="email" placeholder="البريد الإلكتروني">
+<input id="email">
 
 <label id="empLabel">الرقم الوظيفي (اختياري)</label>
-<input id="emp" placeholder="الرقم الوظيفي">
+<input id="emp">
 
 <button type="submit" id="submitBtn">إرسال البلاغ</button>
 
@@ -149,11 +160,17 @@ button:hover {
 <script>
 let isArabic = true;
 
+// ✨ تغيير اسم الموقع هنا فقط لكل صفحة
+let siteArabic = "PDO YIBAL MOTEL";
+let siteEnglish = "PDO YIBAL MOTEL";
+
 function toggleLang() {
   isArabic = !isArabic;
 
   if (!isArabic) {
     document.body.dir = "ltr";
+
+    document.getElementById("siteName").innerText = siteEnglish;
     title.innerText = "Feedback Form";
     categoryLabel.innerText = "1. Category *";
     typeLabel.innerText = "2. Type *";
@@ -166,25 +183,25 @@ function toggleLang() {
     emailLabel.innerText = "Email (Optional)";
     empLabel.innerText = "Employee ID (Optional)";
     submitBtn.innerText = "Send Feedback";
+
   } else {
     location.reload();
   }
 }
 
-// ✅ إرسال البيانات بشكل صحيح
+// إرسال
 async function send(e) {
   e.preventDefault();
 
-  const data = {
-    name: document.getElementById("name").value,
-    location: document.getElementById("location").value,
-    comments: document.getElementById("comments").value
-  };
-
   await fetch("https://sakan-feedback-app.onrender.com/feedback", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name: name.value,
+      location: location.value,
+      comments: comments.value,
+      site: siteArabic // 🔥 مهم لكل موقع
+    })
   });
 
   alert("تم الإرسال بنجاح ✅");
