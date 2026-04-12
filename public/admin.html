@@ -3,11 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-<title>SAKAN Dashboard Pro</title>
-if (localStorage.getItem("loggedIn") !== "true") {
-  window.location.href = "login.html";
-}
+<title>SAKAN Dashboard</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -73,6 +70,12 @@ body {
   cursor: pointer;
 }
 
+.lang {
+  cursor: pointer;
+  color: #2b5dab;
+  font-weight: bold;
+}
+
 /* Content */
 .content {
   padding: 20px;
@@ -91,11 +94,6 @@ body {
   padding: 20px;
   border-radius: 12px;
   text-align: center;
-}
-
-.card p {
-  font-size: 26px;
-  color: #16a34a;
 }
 
 /* Table */
@@ -118,47 +116,26 @@ td {
   border-bottom: 1px solid #eee;
   text-align: center;
 }
-
-tr:hover {
-  background: #f0fdf4;
-}
-
-/* Notification */
-#notif {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #16a34a;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  display: none;
-  z-index: 999;
-}
 </style>
 </head>
 
 <body>
 
-<!-- إشعار -->
-<div id="notif">New Feedback Received 🚀</div>
-
-<!-- Sidebar -->
 <div class="sidebar">
   <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
-
-  <a class="active" onclick="showPage('dashboard', this)">Dashboard</a>
-  <a onclick="showPage('feedback', this)">Feedback</a>
-  <a onclick="showPage('reports', this)">Reports</a>
+  <a class="active" onclick="showPage('dashboard',this)">Dashboard</a>
+  <a onclick="showPage('feedback',this)">Feedback</a>
+  <a onclick="showPage('reports',this)">Reports</a>
 </div>
 
-<!-- Main -->
 <div class="main">
 
-<!-- Header -->
 <div class="header">
-  <h2>📊 SAKAN Dashboard</h2>
-  <button class="logout" onclick="logout()">Logout</button>
+  <h2 id="title">📊 SAKAN Dashboard</h2>
+  <div>
+    <span class="lang" onclick="toggleLang()">EN / AR</span>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
 </div>
 
 <div class="content">
@@ -167,12 +144,11 @@ tr:hover {
 <div id="dashboardPage">
   <div class="cards">
     <div class="card">
-      <h3>عدد الطلبات</h3>
+      <h3 id="totalText">عدد الطلبات</h3>
       <p id="total">0</p>
     </div>
-
     <div class="card">
-      <h3>آخر موقع</h3>
+      <h3 id="lastText">آخر موقع</h3>
       <p id="lastLocation">-</p>
     </div>
   </div>
@@ -182,21 +158,16 @@ tr:hover {
 
 <!-- Feedback -->
 <div id="feedbackPage" style="display:none;">
-  <h2>📋 جميع الشكاوى</h2>
-
-  <!-- زر Excel -->
-  <button onclick="exportExcel()" style="margin-bottom:10px; background:#16a34a; color:white; border:none; padding:10px 15px; border-radius:6px;">
-    📥 Export Excel
-  </button>
+  <h2 id="feedbackTitle">📋 جميع الشكاوى</h2>
 
   <table>
     <thead>
       <tr>
         <th>ID</th>
-        <th>الاسم</th>
-        <th>الموقع</th>
-        <th>التعليق</th>
-        <th>التاريخ</th>
+        <th id="nameCol">الاسم</th>
+        <th id="locCol">الموقع</th>
+        <th id="comCol">التعليق</th>
+        <th id="dateCol">التاريخ</th>
       </tr>
     </thead>
     <tbody id="data"></tbody>
@@ -205,138 +176,128 @@ tr:hover {
 
 <!-- Reports -->
 <div id="reportsPage" style="display:none;">
-  <h2>📊 التقارير</h2>
-  <p>قريباً...</p>
+  <h2 id="reportsTitle">📊 التقارير</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3>حسب الموقع</h3>
+      <canvas id="locationChart"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>يومي</h3>
+      <canvas id="dateChart"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>مقارنة</h3>
+    <canvas id="barChart"></canvas>
+  </div>
 </div>
 
 </div>
 </div>
 
 <script>
-// حماية الصفحة
-if (localStorage.getItem("loggedIn") !== "true") {
-  window.location.href = "login.html";
+if(localStorage.getItem("loggedIn")!=="true"){
+  window.location.href="login.html";
 }
 
-// Logout
-function logout() {
+function logout(){
   localStorage.removeItem("loggedIn");
-  window.location.href = "login.html";
+  window.location.href="login.html";
 }
 
-let allData = [];
-let lastCount = 0;
+let allData=[];
 
-// تحميل البيانات
-async function loadData() {
-  const res = await fetch("https://sakan-feedback-app.onrender.com/feedback");
-  const data = await res.json();
+async function loadData(){
+  const res=await fetch("https://sakan-feedback-app.onrender.com/feedback");
+  const data=await res.json();
 
-  allData = data;
+  allData=data;
   displayData(data);
 
-  document.getElementById("total").innerText = data.length;
-  document.getElementById("lastLocation").innerText = data[0]?.location || "-";
+  total.innerText=data.length;
+  lastLocation.innerText=data[0]?.location||"-";
 
   generateChart(data);
-  lastCount = data.length;
+  generateReports(data);
 }
 
-// عرض الجدول
-function displayData(data) {
-  const table = document.getElementById("data");
-  table.innerHTML = "";
-
-  data.forEach(item => {
-    table.innerHTML += `
-      <tr>
-        <td>${item.id}</td>
-        <td>${item.name}</td>
-        <td>${item.location}</td>
-        <td>${item.comments}</td>
-        <td>${item.created_at || "-"}</td>
-      </tr>
-    `;
+function displayData(data){
+  document.getElementById("data").innerHTML="";
+  data.forEach(item=>{
+    document.getElementById("data").innerHTML+=`
+    <tr>
+      <td>${item.id}</td>
+      <td>${item.name}</td>
+      <td>${item.location}</td>
+      <td>${item.comments}</td>
+      <td>${item.created_at||"-"}</td>
+    </tr>`;
   });
 }
 
-// Chart
-function generateChart(data) {
-  const locations = {};
+function generateChart(data){
+  const loc={};
+  data.forEach(i=>loc[i.location]=(loc[i.location]||0)+1);
 
-  data.forEach(item => {
-    locations[item.location] = (locations[item.location] || 0) + 1;
-  });
-
-  new Chart(document.getElementById("chart"), {
-    type: "bar",
-    data: {
-      labels: Object.keys(locations),
-      datasets: [{
-        label: "عدد الشكاوى",
-        data: Object.values(locations),
-        backgroundColor: "#16a34a"
+  new Chart(chart,{
+    type:"bar",
+    data:{
+      labels:Object.keys(loc),
+      datasets:[{
+        data:Object.values(loc),
+        backgroundColor:"#16a34a"
       }]
     }
   });
 }
 
-// Navigation
-function showPage(page, el) {
-  document.getElementById("dashboardPage").style.display = "none";
-  document.getElementById("feedbackPage").style.display = "none";
-  document.getElementById("reportsPage").style.display = "none";
+function generateReports(data){
+  const loc={};
+  data.forEach(i=>loc[i.location]=(loc[i.location]||0)+1);
 
-  document.querySelectorAll(".sidebar a").forEach(link => link.classList.remove("active"));
-  el.classList.add("active");
-
-  if (page === "dashboard") document.getElementById("dashboardPage").style.display = "block";
-  if (page === "feedback") document.getElementById("feedbackPage").style.display = "block";
-  if (page === "reports") document.getElementById("reportsPage").style.display = "block";
-}
-
-// Export Excel
-function exportExcel() {
-  let csv = "ID,Name,Location,Comments,Date\n";
-
-  allData.forEach(item => {
-    csv += `${item.id},${item.name},${item.location},${item.comments},${item.created_at}\n`;
+  new Chart(locationChart,{
+    type:"pie",
+    data:{labels:Object.keys(loc),datasets:[{data:Object.values(loc)}]}
   });
 
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = window.URL.createObjectURL(blob);
+  const dates={};
+  data.forEach(i=>{
+    const d=i.created_at?.split("T")[0];
+    dates[d]=(dates[d]||0)+1;
+  });
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "sakan-feedback.csv";
-  a.click();
+  new Chart(dateChart,{
+    type:"line",
+    data:{labels:Object.keys(dates),datasets:[{data:Object.values(dates)}]}
+  });
+
+  new Chart(barChart,{
+    type:"bar",
+    data:{labels:Object.keys(loc),datasets:[{data:Object.values(loc)}]}
+  });
 }
 
-// إشعارات
-async function checkNewFeedback() {
-  const res = await fetch("https://sakan-feedback-app.onrender.com/feedback");
-  const data = await res.json();
+function showPage(p,e){
+  dashboardPage.style.display="none";
+  feedbackPage.style.display="none";
+  reportsPage.style.display="none";
 
-  if (data.length > lastCount && lastCount !== 0) {
-    showNotification();
-  }
+  document.querySelectorAll(".sidebar a").forEach(a=>a.classList.remove("active"));
+  e.classList.add("active");
 
-  lastCount = data.length;
+  if(p==="dashboard")dashboardPage.style.display="block";
+  if(p==="feedback")feedbackPage.style.display="block";
+  if(p==="reports")reportsPage.style.display="block";
 }
 
-function showNotification() {
-  const notif = document.getElementById("notif");
-  notif.style.display = "block";
-
-  setTimeout(() => {
-    notif.style.display = "none";
-  }, 3000);
+function toggleLang(){
+  document.body.dir = document.body.dir === "rtl" ? "ltr" : "rtl";
 }
 
-// كل 10 ثواني
-setInterval(checkNewFeedback, 10000);
-
-// تشغيل
 loadData();
 </script>
 
