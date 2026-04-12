@@ -3,26 +3,28 @@ const cors = require("cors");
 const { Pool } = require("pg");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
-// ✅ Database connection
+
+// Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
-// ✅ Users (Login)
+// Users (Login)
 const users = [
   { username: "admin", password: "1234" }
 ];
 
-// ✅ Login API (مرة واحدة فقط)
+// Login API
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
-  const user = users.find(u =>
-    u.username === username && u.password === password
+  const user = users.find(
+    (u) => u.username === username && u.password === password
   );
 
   if (user) {
@@ -32,29 +34,29 @@ app.post("/login", (req, res) => {
   }
 });
 
-// ✅ Test route
+// Test route
 app.get("/", (req, res) => {
   res.send("SAKAN Feedback System is Running ✅");
 });
 
-// ✅ Add feedback
+// Add feedback
 app.post("/feedback", async (req, res) => {
   try {
-    const { name, location, comments } = req.body;
+    const { name, location, comments, site } = req.body;
 
     await pool.query(
-      "INSERT INTO feedback (name, location, comments) VALUES ($1,$2,$3)",
-      [name, location, comments]
+      "INSERT INTO feedback (name, location, comments, site) VALUES ($1, $2, $3, $4)",
+      [name, location, comments, site]
     );
 
     res.json({ message: "Saved" });
   } catch (error) {
-    console.error(error);
+    console.error("POST /feedback error:", error);
     res.status(500).json({ error: "Database error" });
   }
 });
 
-// ✅ Get feedback
+// Get all feedback
 app.get("/feedback", async (req, res) => {
   try {
     const result = await pool.query(
@@ -62,21 +64,30 @@ app.get("/feedback", async (req, res) => {
     );
     res.json(result.rows);
   } catch (error) {
-    console.error(error);
+    console.error("GET /feedback error:", error);
     res.status(500).json({ error: "Database error" });
   }
-  app.get("/feedback/:site", async (req, res) => {
-  const site = req.params.site;
-
-  const result = await pool.query(
-    "SELECT * FROM feedback WHERE site = $1 ORDER BY id DESC",
-    [site]
-  );
-
-  res.json(result.rows);
-});
 });
 
-// ✅ Start server
+// Get feedback by site
+app.get("/feedback/:site", async (req, res) => {
+  try {
+    const site = req.params.site;
+
+    const result = await pool.query(
+      "SELECT * FROM feedback WHERE site = $1 ORDER BY id DESC",
+      [site]
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error("GET /feedback/:site error:", error);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
