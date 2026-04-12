@@ -1,36 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <title>Login</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f4f6f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.box {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: #16a34a;
+  color: white;
+  border: none;
+}
+</style>
 </head>
 
-<body style="text-align:center; margin-top:100px;">
+<body>
 
-<h2>Admin Login</h2>
+<div class="box">
+  <h2>Admin Login</h2>
 
-<input id="user" placeholder="Username"><br><br>
-<input id="pass" type="password" placeholder="Password"><br><br>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+  <button onclick="login()">Login</button>
+</div>
 
 <script>
 async function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
   const res = await fetch("https://sakan-feedback-app.onrender.com/login", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({
-      username: document.getElementById("user").value,
-      password: document.getElementById("pass").value
-    })
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ username, password })
   });
 
   const data = await res.json();
 
-  if(data.success){
+  if (data.success) {
     localStorage.setItem("loggedIn", "true"); // ✅ مهم جداً
-    window.location = "admin.html";
+    window.location.href = "admin.html";
   } else {
-    alert("Wrong login");
+    alert("Wrong login ❌");
   }
 }
 </script>
