@@ -65,6 +65,16 @@ app.get("/feedback", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Database error" });
   }
+  app.get("/feedback/:site", async (req, res) => {
+  const site = req.params.site;
+
+  const result = await pool.query(
+    "SELECT * FROM feedback WHERE site = $1 ORDER BY id DESC",
+    [site]
+  );
+
+  res.json(result.rows);
+});
 });
 
 // ✅ Start server
