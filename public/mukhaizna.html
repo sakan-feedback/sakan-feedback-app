@@ -1,0 +1,213 @@
+<!DOCTYPE html>  
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAKAN Feedback</title>
+
+<style>
+body {
+  font-family: "Segoe UI", Tahoma;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.container {
+  background: white;
+  width: 600px;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.logo img {
+  width: 120px;
+  background: white;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+/* ✅ اسم الموقع */
+.site-name {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #16a34a;
+  margin-bottom: 5px;
+}
+
+h2 {
+  text-align: center;
+  color: #2b5dab;
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+
+.required {
+  color: red;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+textarea {
+  height: 100px;
+}
+
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(to right, #16a34a, #2b5dab);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.lang-switch {
+  text-align: right;
+  margin-bottom: 10px;
+  cursor: pointer;
+  color: #2b5dab;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="lang-switch" onclick="toggleLang()">🌐 EN / AR</div>
+
+<div class="logo">
+  <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
+</div>
+
+<!-- ✅ اسم الموقع -->
+<div class="site-name" id="siteName">Occidental Petroleum - OXY Mukhaizna</div>
+
+<h2 id="title">استمارة الاقتراحات والشكاوي</h2>
+
+<form onsubmit="send(event)">
+
+<label id="categoryLabel">1. الفئة <span class="required">*</span></label>
+<select id="category" required>
+  <option value="">اختر مستوى الأهمية</option>
+  <option>منخفض</option>
+  <option>متوسط</option>
+  <option>عالي</option>
+</select>
+
+<label id="typeLabel">2. نوع المشكلة <span class="required">*</span></label>
+<select id="type" required>
+  <option value="">اختر نوع المشكلة</option>
+  <option>شكوى</option>
+  <option>اقتراح</option>
+</select>
+
+<label id="descLabel">3. وصف المشكلة <span class="required">*</span></label>
+<textarea id="comments" placeholder="صف المشكلة بالتفصيل..." required></textarea>
+
+<label id="locationLabel">الموقع / القسم (اختياري)</label>
+<input id="location" placeholder="أدخل الموقع أو القسم">
+
+<h3 id="contactTitle">4. معلومات التواصل</h3>
+
+<label id="nameLabel">الاسم <span class="required">*</span></label>
+<input id="name" required>
+
+<label id="phoneLabel">رقم الهاتف <span class="required">*</span></label>
+<input id="phone" required>
+
+<label id="roomLabel">رقم الغرفة (اختياري)</label>
+<input id="room">
+
+<label id="emailLabel">البريد الإلكتروني (اختياري)</label>
+<input id="email">
+
+<label id="empLabel">الرقم الوظيفي (اختياري)</label>
+<input id="emp">
+
+<button type="submit" id="submitBtn">إرسال البلاغ</button>
+
+</form>
+
+</div>
+
+<script>
+let isArabic = true;
+
+// ✅ اسم الموقع (مهم للربط)
+let siteArabic = "Occidental Petroleum - OXY Mukhaizna";
+let siteEnglish = "Occidental Petroleum - OXY Mukhaizna";
+
+function toggleLang() {
+  isArabic = !isArabic;
+
+  if (!isArabic) {
+    document.body.dir = "ltr";
+
+    document.getElementById("siteName").innerText = siteEnglish;
+    title.innerText = "Feedback Form";
+    categoryLabel.innerText = "1. Category *";
+    typeLabel.innerText = "2. Type *";
+    descLabel.innerText = "3. Description *";
+    locationLabel.innerText = "Location / Department (Optional)";
+    contactTitle.innerText = "4. Contact Information";
+    nameLabel.innerText = "Name *";
+    phoneLabel.innerText = "Phone Number *";
+    roomLabel.innerText = "Room Number (Optional)";
+    emailLabel.innerText = "Email (Optional)";
+    empLabel.innerText = "Employee ID (Optional)";
+    submitBtn.innerText = "Send Feedback";
+
+  } else {
+    location.reload();
+  }
+}
+
+// إرسال
+async function send(e) {
+  e.preventDefault();
+
+  await fetch("https://sakan-feedback-app.onrender.com/feedback", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name: name.value,
+      location: location.value,
+      comments: comments.value,
+      site: siteArabic
+    })
+  });
+
+  alert("تم الإرسال بنجاح ✅");
+  document.querySelector("form").reset();
+}
+</script>
+
+</body>
+</html>
