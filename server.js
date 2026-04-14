@@ -12,11 +12,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// إذا عندك ملفات HTML داخل public
 app.use(express.static(path.join(__dirname, "public")));
 
-// Database connection
+// PostgreSQL connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_URL
@@ -24,12 +22,12 @@ const pool = new Pool({
     : false
 });
 
-// Simple users list
+// Simple login users
 const users = [
   { username: "admin", password: "1234", role: "admin" }
 ];
 
-// Test DB connection at startup
+// Test DB connection
 pool.connect()
   .then(client => {
     console.log("✅ Connected to PostgreSQL");
@@ -39,13 +37,13 @@ pool.connect()
     console.error("❌ PostgreSQL connection error:", err.message);
   });
 
-// Ensure feedback table exists
+// Create table if not exists
 async function initDatabase() {
   const query = `
     CREATE TABLE IF NOT EXISTS feedback (
       id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      location VARCHAR(255) NOT NULL,
+      name VARCHAR(255),
+      location VARCHAR(255),
       comments TEXT NOT NULL,
       category VARCHAR(100),
       rating VARCHAR(50),
@@ -63,9 +61,7 @@ async function initDatabase() {
 
 initDatabase();
 
-// Routes
-
-// Root route
+// Root
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -135,18 +131,12 @@ app.post("/login", (req, res) => {
 // Submit feedback
 app.post("/feedback", async (req, res) => {
   try {
-    const {
-      name,
-      location,
-      comments,
-      category,
-      rating
-    } = req.body;
+    const { name, location, comments, category, rating } = req.body;
 
-    if (!name || !location || !comments) {
+    if (!comments || !String(comments).trim()) {
       return res.status(400).json({
         success: false,
-        message: "name, location, and comments are required"
+        message: "comments is required"
       });
     }
 
@@ -157,11 +147,11 @@ app.post("/feedback", async (req, res) => {
     `;
 
     const values = [
-      name.trim(),
-      location.trim(),
-      comments.trim(),
-      category ? category.trim() : null,
-      rating ? rating.trim() : null
+      name ? String(name).trim() : null,
+      location ? String(location).trim() : null,
+      String(comments).trim(),
+      category ? String(category).trim() : null,
+      rating ? String(rating).trim() : null
     ];
 
     const result = await pool.query(query, values);
@@ -180,7 +170,7 @@ app.post("/feedback", async (req, res) => {
   }
 });
 
-// Get all feedback for dashboard
+// Get all feedback
 app.get("/feedback", async (req, res) => {
   try {
     const query = `
@@ -201,7 +191,7 @@ app.get("/feedback", async (req, res) => {
   }
 });
 
-// Optional: get feedback by location
+// Get feedback by location
 app.get("/feedback/location/:location", async (req, res) => {
   try {
     const { location } = req.params;
@@ -225,10 +215,17 @@ app.get("/feedback/location/:location", async (req, res) => {
   }
 });
 
-// Optional: delete one feedback
+// Delete feedback by ID
 app.delete("/feedback/:id", async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!id || isNaN(Number(id))) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid feedback ID"
+      });
+    }
 
     const result = await pool.query(
       "DELETE FROM feedback WHERE id = $1 RETURNING *",
@@ -256,7 +253,66 @@ app.delete("/feedback/:id", async (req, res) => {
   }
 });
 
-// 404 handler
+// Optional update feedback
+app.put("/feedback/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, location, comments, category, rating } = req.body;
+
+    if (!id || isNaN(Number(id))) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid feedback ID"
+      });
+    }
+
+    const check = await pool.query("SELECT * FROM feedback WHERE id = $1", [id]);
+
+    if (check.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Feedback not found"
+      });
+    }
+
+    const current = check.rows[0];
+
+    const result = await pool.query(
+      `
+      UPDATE feedback
+      SET name = $1,
+          location = $2,
+          comments = $3,
+          category = $4,
+          rating = $5
+      WHERE id = $6
+      RETURNING *
+      `,
+      [
+        name !== undefined ? name : current.name,
+        location !== undefined ? location : current.location,
+        comments !== undefined ? comments : current.comments,
+        category !== undefined ? category : current.category,
+        rating !== undefined ? rating : current.rating,
+        id
+      ]
+    );
+
+    return res.json({
+      success: true,
+      message: "Feedback updated successfully",
+      data: result.rows[0]
+    });
+  } catch (error) {
+    console.error("❌ Error updating feedback:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update feedback"
+    });
+  }
+});
+
+// 404 route
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -275,33 +331,4 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  app.delete("/feedback/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const result = await pool.query(
-      "DELETE FROM feedback WHERE id = $1 RETURNING *",
-      [id]
-    );
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Feedback not found"
-      });
-    }
-
-    return res.json({
-      success: true,
-      message: "Feedback deleted successfully",
-      data: result.rows[0]
-    });
-  } catch (error) {
-    console.error("Error deleting feedback:", error.message);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to delete feedback"
-    });
-  }
-});
 });
