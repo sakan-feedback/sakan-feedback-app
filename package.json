@@ -8,8 +8,7 @@
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
-    "pg": "^8.11.3"
-
- npm install nodemailer
+    "pg": "^8.11.3",
+    "nodemailer": "^6.9.14"
   }
 }
