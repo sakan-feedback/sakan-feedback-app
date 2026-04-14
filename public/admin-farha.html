@@ -274,7 +274,29 @@ function exportExcel(){
   XLSX.writeFile(workbook, "SAKAN-Feedback.xlsx");
 }
 
-loadData();
+<script>
+const API = "https://sakan-feedback-app.onrender.com";
+const SITE_NAME = "CCED FARHA";
+
+async function loadData(){
+  try {
+    const res = await fetch(`${API}/feedback`);
+    const data = await res.json();
+
+    const filteredData = data.filter(item =>
+      (item.location || "").trim().toUpperCase() === SITE_NAME
+    );
+
+    document.getElementById("status").innerText =
+      `Loaded ${filteredData.length} record(s) successfully`;
+
+    displayData(filteredData);
+
+  } catch(e){
+    document.getElementById("status").innerText = "❌ Failed to load data";
+  }
+}
+</script>
 
 </script>
 
