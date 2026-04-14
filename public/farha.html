@@ -13,84 +13,124 @@
     body {
       margin: 0;
       font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-      background: #f3f4f6;
-      padding: 30px 15px;
+      background: #eef1f5;
+      min-height: 100vh;
+      padding: 40px 15px;
     }
 
     .container {
-      max-width: 650px;
+      max-width: 760px;
       margin: 0 auto;
-      background: white;
-      border-radius: 16px;
-      padding: 30px 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 35px 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 10px;
+      color: #2563eb;
+      font-size: 15px;
+      cursor: pointer;
     }
 
     .logo {
       display: block;
       width: 120px;
-      margin: 0 auto 20px;
+      margin: 0 auto 18px;
     }
 
-    h1, h2, p {
+    .site-name {
       text-align: center;
-      margin: 0 0 15px;
-    }
-
-    h2 {
       color: #16a34a;
-      font-size: 24px;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
-    p.subtitle {
+    .title {
+      text-align: center;
       color: #2b5dab;
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 25px;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 28px 0 18px;
+      color: #111827;
+    }
+
+    .field {
+      margin-bottom: 18px;
     }
 
     label {
       display: block;
       margin-bottom: 8px;
+      font-size: 18px;
       font-weight: 600;
+      color: #111827;
     }
 
-    input, textarea {
+    .required {
+      color: #dc2626;
+    }
+
+    input,
+    select,
+    textarea {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
+      padding: 14px 16px;
       border: 1px solid #d1d5db;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 16px;
       font-family: inherit;
+      background: #fff;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #2b5dab;
+      box-shadow: 0 0 0 3px rgba(43, 93, 171, 0.12);
     }
 
     textarea {
+      min-height: 140px;
       resize: vertical;
-      min-height: 130px;
     }
 
-    button {
+    .submit-btn {
       width: 100%;
-      padding: 14px;
       border: none;
       border-radius: 10px;
-      background: linear-gradient(90deg, #16a34a, #2563eb);
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 700;
       color: white;
-      font-size: 16px;
       cursor: pointer;
+      background: linear-gradient(90deg, #16a34a, #2563eb);
+      margin-top: 10px;
     }
 
-    button:disabled {
+    .submit-btn:disabled {
       opacity: 0.7;
       cursor: not-allowed;
     }
 
     .message {
-      margin-top: 15px;
-      padding: 12px;
+      margin-top: 16px;
+      padding: 14px;
       border-radius: 10px;
       display: none;
+      font-size: 15px;
       text-align: center;
     }
 
@@ -104,38 +144,109 @@
       color: #991b1b;
     }
 
-    .site-badge {
-      text-align: center;
-      color: #16a34a;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
     .hidden-field {
       display: none;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 24px 18px;
+      }
+
+      .title {
+        font-size: 24px;
+      }
+
+      .site-name {
+        font-size: 22px;
+      }
+
+      label {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <img class="logo" src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png" alt="SAKAN Logo">
 
-    <div class="site-badge">CCED FARHA</div>
-    <p class="subtitle">استمارة الاقتراحات والشكاوى</p>
+  <div class="container">
+    <div class="topbar">🌐 EN / AR</div>
+
+    <img
+      class="logo"
+      src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png"
+      alt="SAKAN Logo"
+    >
+
+    <div class="site-name">CCED FARHA</div>
+    <div class="title">استمارة الاقتراحات والشكاوى</div>
 
     <form id="feedbackForm">
       <input type="hidden" id="location" value="CCED FARHA" class="hidden-field">
 
-      <label for="name">الاسم</label>
-      <input type="text" id="name" placeholder="أدخل الاسم">
+      <div class="field">
+        <label for="priority">1. الفئة <span class="required">*</span></label>
+        <select id="priority" required>
+          <option value="">اختر مستوى الأهمية</option>
+          <option value="Low">منخفض</option>
+          <option value="Medium">متوسط</option>
+          <option value="High">عالي</option>
+        </select>
+      </div>
 
-      <label for="comments">وصف المشكلة / الاقتراح <span style="color:red">*</span></label>
-      <textarea id="comments" placeholder="اكتب التفاصيل هنا" required></textarea>
+      <div class="field">
+        <label for="issueType">2. نوع المشكلة <span class="required">*</span></label>
+        <select id="issueType" required>
+          <option value="">اختر نوع المشكلة</option>
+          <option value="Housekeeping">Housekeeping</option>
+          <option value="Maintenance">Maintenance</option>
+          <option value="Catering">Catering</option>
+          <option value="Laundry">Laundry</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
 
-      <button type="submit" id="submitBtn">إرسال</button>
+      <div class="field">
+        <label for="comments">3. وصف المشكلة <span class="required">*</span></label>
+        <textarea id="comments" placeholder="اكتب التفاصيل هنا" required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="department">الموقع / القسم (اختياري)</label>
+        <input type="text" id="department" placeholder="مثال: المبنى A أو المطبخ أو السكن">
+      </div>
+
+      <div class="section-title">4. معلومات التواصل</div>
+
+      <div class="field">
+        <label for="name">الاسم <span class="required">*</span></label>
+        <input type="text" id="name" placeholder="أدخل الاسم" required>
+      </div>
+
+      <div class="field">
+        <label for="phone">رقم الهاتف <span class="required">*</span></label>
+        <input type="text" id="phone" placeholder="أدخل رقم الهاتف" required>
+      </div>
+
+      <div class="field">
+        <label for="roomNo">رقم الغرفة (اختياري)</label>
+        <input type="text" id="roomNo" placeholder="أدخل رقم الغرفة">
+      </div>
+
+      <div class="field">
+        <label for="email">البريد الإلكتروني (اختياري)</label>
+        <input type="email" id="email" placeholder="أدخل البريد الإلكتروني">
+      </div>
+
+      <div class="field">
+        <label for="employeeNo">الرقم الوظيفي (اختياري)</label>
+        <input type="text" id="employeeNo" placeholder="أدخل الرقم الوظيفي">
+      </div>
+
+      <button type="submit" id="submitBtn" class="submit-btn">إرسال البلاغ</button>
     </form>
 
-    <div id="successMessage" class="message success">تم إرسال الشكوى بنجاح</div>
+    <div id="successMessage" class="message success">تم إرسال البلاغ بنجاح</div>
     <div id="errorMessage" class="message error">حدث خطأ أثناء الإرسال</div>
   </div>
 
@@ -156,12 +267,21 @@
       e.preventDefault();
       resetMessages();
 
-      const name = document.getElementById("name").value.trim();
-      const location = document.getElementById("location").value.trim();
-      const comments = document.getElementById("comments").value.trim();
+      const payload = {
+        location: "CCED FARHA",
+        priority: document.getElementById("priority").value,
+        issueType: document.getElementById("issueType").value,
+        comments: document.getElementById("comments").value.trim(),
+        department: document.getElementById("department").value.trim(),
+        name: document.getElementById("name").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        roomNo: document.getElementById("roomNo").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        employeeNo: document.getElementById("employeeNo").value.trim()
+      };
 
-      if (!comments) {
-        errorMessage.textContent = "يرجى كتابة وصف المشكلة أو الاقتراح";
+      if (!payload.priority || !payload.issueType || !payload.comments || !payload.name || !payload.phone) {
+        errorMessage.textContent = "يرجى تعبئة جميع الحقول المطلوبة";
         errorMessage.style.display = "block";
         return;
       }
@@ -176,9 +296,16 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            name,
-            location,
-            comments
+            name: payload.name,
+            location: payload.location,
+            comments: payload.comments,
+            category: payload.issueType,
+            rating: payload.priority,
+            phone: payload.phone,
+            email: payload.email,
+            room_no: payload.roomNo,
+            employee_no: payload.employeeNo,
+            department: payload.department
           })
         });
 
@@ -190,17 +317,13 @@
 
         successMessage.style.display = "block";
         feedbackForm.reset();
-
-        // إعادة تعيين الموقع الثابت بعد reset
-        document.getElementById("location").value = "CCED FARHA";
-
       } catch (error) {
         console.error(error);
         errorMessage.textContent = "فشل إرسال البيانات، حاول مرة أخرى";
         errorMessage.style.display = "block";
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = "إرسال";
+        submitBtn.textContent = "إرسال البلاغ";
       }
     });
   </script>
