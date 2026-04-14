@@ -1,31 +1,25 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SAKAN Dashboard</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      font-family: "Segoe UI";
       background: #f4f6f9;
       display: flex;
-      color: #1f2937;
     }
 
     .sidebar {
       width: 240px;
       background: #2b5dab;
       color: white;
-      min-height: 100vh;
-      position: fixed;
+      height: 100vh;
       padding: 20px;
     }
 
@@ -35,7 +29,6 @@
       padding: 8px;
       border-radius: 10px;
       margin-bottom: 30px;
-      display: block;
     }
 
     .sidebar a {
@@ -44,20 +37,15 @@
       margin-bottom: 10px;
       border-radius: 8px;
       cursor: pointer;
-      text-decoration: none;
-      color: white;
-      transition: 0.2s ease;
     }
 
-    .sidebar a:hover,
-    .sidebar a.active {
+    .sidebar a.active,
+    .sidebar a:hover {
       background: #16a34a;
     }
 
     .main {
-      margin-left: 240px;
-      width: calc(100% - 240px);
-      min-height: 100vh;
+      width: 100%;
     }
 
     .header {
@@ -65,18 +53,6 @@
       padding: 15px 20px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      border-bottom: 1px solid #e5e7eb;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
     }
 
     .logout {
@@ -86,532 +62,179 @@
       padding: 8px 15px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 14px;
-    }
-
-    .logout:hover {
-      opacity: 0.95;
-    }
-
-    .lang {
-      cursor: pointer;
-      color: #2b5dab;
-      font-weight: bold;
-      user-select: none;
     }
 
     .content {
       padding: 20px;
     }
 
-    .cards {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .card {
-      flex: 1;
-      min-width: 260px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-    }
-
     table {
       width: 100%;
+      background: white;
       border-collapse: collapse;
-      min-width: 700px;
+      border-radius: 12px;
+      overflow: hidden;
     }
 
     th {
       background: #2b5dab;
       color: white;
       padding: 12px;
-      text-align: center;
     }
 
     td {
       padding: 10px;
       border-bottom: 1px solid #eee;
       text-align: center;
-      vertical-align: top;
     }
 
-    tr:hover td {
-      background: #f9fafb;
+    .delete-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
-    .status-box {
-      background: #fff;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-      font-size: 14px;
+    .delete-btn:hover {
+      background: #b91c1c;
     }
 
-    .status-success {
-      color: #166534;
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-    }
-
-    .status-error {
-      color: #991b1b;
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-    }
-
-    .status-info {
-      color: #1d4ed8;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-    }
-
-    .empty-message {
-      padding: 20px;
-      text-align: center;
-      color: #6b7280;
-    }
-
-    canvas {
-      background: white;
-      border-radius: 12px;
+    .status {
+      background: #d1fae5;
       padding: 10px;
-      max-width: 100%;
-    }
-
-    @media (max-width: 900px) {
-      body {
-        display: block;
-      }
-
-      .sidebar {
-        position: relative;
-        width: 100%;
-        min-height: auto;
-      }
-
-      .main {
-        margin-left: 0;
-        width: 100%;
-      }
+      margin-bottom: 15px;
+      border-radius: 8px;
+      color: #065f46;
     }
   </style>
 </head>
 
 <body>
-  <div class="sidebar">
-    <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png" alt="SAKAN Logo">
 
-    <a class="active" onclick="showPage('dashboard', this)">Dashboard</a>
-    <a onclick="showPage('feedback', this)">Feedback</a>
-    <a onclick="showPage('reports', this)">Reports</a>
-  </div>
+<div class="sidebar">
+  <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
 
-  <div class="main">
-    <div class="header">
-      <h2 id="title">📊 SAKAN Dashboard</h2>
+  <a class="active">Dashboard</a>
+  <a>Feedback</a>
+</div>
 
-      <div class="header-actions">
-        <span class="lang" onclick="toggleLang()">EN / AR</span>
-        <button class="logout" onclick="logout()">Logout</button>
-      </div>
-    </div>
+<div class="main">
 
-    <div class="content">
-      <div id="statusBox" class="status-box status-info">Loading data...</div>
+<div class="header">
+  <h2>📊 SAKAN Dashboard</h2>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
 
-      <!-- Dashboard -->
-      <div id="dashboardPage">
-        <div class="cards">
-          <div class="card">
-            <h3 id="totalText">عدد الطلبات</h3>
-            <p id="total">0</p>
-          </div>
+<div class="content">
 
-          <div class="card">
-            <h3 id="lastText">آخر موقع</h3>
-            <p id="lastLocation">-</p>
-          </div>
-        </div>
+<div id="status" class="status">Loading...</div>
 
-        <div class="card">
-          <canvas id="chart"></canvas>
-        </div>
-      </div>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>الاسم</th>
+      <th>الموقع</th>
+      <th>التعليق</th>
+      <th>التاريخ</th>
+      <th>حذف</th>
+    </tr>
+  </thead>
+  <tbody id="data"></tbody>
+</table>
 
-      <!-- Feedback -->
-      <div id="feedbackPage" style="display:none;">
-        <h2 id="feedbackTitle">📋 جميع الشكاوى</h2>
+</div>
+</div>
 
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th id="nameCol">الاسم</th>
-                <th id="locCol">الموقع</th>
-                <th id="comCol">التعليق</th>
-                <th id="dateCol">التاريخ</th>
-              </tr>
-            </thead>
-            <tbody id="data"></tbody>
-          </table>
-          <div id="emptyTableMessage" class="empty-message" style="display:none;">
-            لا توجد بيانات حالياً
-          </div>
-        </div>
-      </div>
+<script>
 
-      <!-- Reports -->
-      <div id="reportsPage" style="display:none;">
-        <h2 id="reportsTitle">📊 التقارير</h2>
+const API = "https://sakan-feedback-app.onrender.com";
 
-        <div class="cards">
-          <div class="card">
-            <h3>حسب الموقع</h3>
-            <canvas id="locationChart"></canvas>
-          </div>
+if(localStorage.getItem("loggedIn") !== "true"){
+  window.location.href = "login.html";
+}
 
-          <div class="card">
-            <h3>يومي</h3>
-            <canvas id="dateChart"></canvas>
-          </div>
-        </div>
+function logout(){
+  localStorage.removeItem("loggedIn");
+  window.location.href = "login.html";
+}
 
-        <div class="card">
-          <h3>مقارنة</h3>
-          <canvas id="barChart"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
+function formatDate(d){
+  if(!d) return "-";
+  return new Date(d).toLocaleString();
+}
 
-  <script>
-    const API_URL = "https://sakan-feedback-app.onrender.com/feedback";
+function escapeHtml(text){
+  if(!text) return "-";
+  return text;
+}
 
-    const dashboardPage = document.getElementById("dashboardPage");
-    const feedbackPage = document.getElementById("feedbackPage");
-    const reportsPage = document.getElementById("reportsPage");
+async function loadData(){
+  try {
+    const res = await fetch(`${API}/feedback`);
+    const data = await res.json();
 
-    const totalEl = document.getElementById("total");
-    const lastLocationEl = document.getElementById("lastLocation");
-    const dataBody = document.getElementById("data");
-    const statusBox = document.getElementById("statusBox");
-    const emptyTableMessage = document.getElementById("emptyTableMessage");
+    document.getElementById("status").innerText =
+      `Loaded ${data.length} record(s) successfully`;
 
-    let allData = [];
-    let dashboardChartInstance = null;
-    let locationChartInstance = null;
-    let dateChartInstance = null;
-    let barChartInstance = null;
+    displayData(data);
 
-    if (localStorage.getItem("loggedIn") !== "true") {
-      window.location.href = "login.html";
+  } catch(e){
+    document.getElementById("status").innerText =
+      "❌ Failed to load data";
+  }
+}
+
+function displayData(data){
+  const table = document.getElementById("data");
+  table.innerHTML = "";
+
+  data.forEach(item => {
+    table.innerHTML += `
+      <tr>
+        <td>${item.id}</td>
+        <td>${escapeHtml(item.name)}</td>
+        <td>${escapeHtml(item.location)}</td>
+        <td>${escapeHtml(item.comments)}</td>
+        <td>${formatDate(item.created_at)}</td>
+        <td>
+          <button class="delete-btn" onclick="deleteRow(${item.id})">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+async function deleteRow(id){
+  const confirmDelete = confirm("هل تريد حذف هذا السجل؟");
+  if(!confirmDelete) return;
+
+  try {
+    const res = await fetch(`${API}/feedback/${id}`, {
+      method: "DELETE"
+    });
+
+    const result = await res.json();
+
+    if(res.ok){
+      alert("تم الحذف بنجاح");
+      loadData();
+    } else {
+      alert(result.message || "خطأ في الحذف");
     }
 
-    function logout() {
-      localStorage.removeItem("loggedIn");
-      window.location.href = "login.html";
-    }
+  } catch(e){
+    alert("فشل الاتصال بالسيرفر");
+  }
+}
 
-    function setStatus(message, type = "info") {
-      statusBox.textContent = message;
-      statusBox.className = "status-box";
+loadData();
 
-      if (type === "success") {
-        statusBox.classList.add("status-success");
-      } else if (type === "error") {
-        statusBox.classList.add("status-error");
-      } else {
-        statusBox.classList.add("status-info");
-      }
-    }
+</script>
 
-    function escapeHtml(value) {
-      if (value === null || value === undefined) return "-";
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function formatDate(dateString) {
-      if (!dateString) return "-";
-
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return dateString;
-
-      return date.toLocaleString("en-GB", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    }
-
-    function destroyChart(chartInstance) {
-      if (chartInstance) {
-        chartInstance.destroy();
-      }
-    }
-
-    async function loadData() {
-      try {
-        setStatus("Loading data...", "info");
-
-        const res = await fetch(API_URL, {
-          method: "GET",
-          headers: {
-            "Accept": "application/json"
-          }
-        });
-
-        if (!res.ok) {
-          throw new Error(`Server responded with status ${res.status}`);
-        }
-
-        const data = await res.json();
-
-        if (!Array.isArray(data)) {
-          throw new Error("Invalid response format. Expected an array.");
-        }
-
-        allData = data;
-        displayData(allData);
-        updateSummary(allData);
-        generateChart(allData);
-        generateReports(allData);
-
-        if (allData.length > 0) {
-          setStatus(`Loaded ${allData.length} record(s) successfully.`, "success");
-        } else {
-          setStatus("No feedback records found.", "info");
-        }
-
-      } catch (error) {
-        console.error("Error loading data:", error);
-        allData = [];
-        displayData([]);
-        updateSummary([]);
-        destroyAllCharts();
-        setStatus("Failed to load data from server. Check API / backend / CORS.", "error");
-      }
-    }
-
-    function updateSummary(data) {
-      totalEl.textContent = data.length;
-
-      if (data.length > 0) {
-        const latestItem = data[0];
-        lastLocationEl.textContent = latestItem.location || "-";
-      } else {
-        lastLocationEl.textContent = "-";
-      }
-    }
-
-    function displayData(data) {
-      dataBody.innerHTML = "";
-
-      if (!data || data.length === 0) {
-        emptyTableMessage.style.display = "block";
-        return;
-      }
-
-      emptyTableMessage.style.display = "none";
-
-      data.forEach((item) => {
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-          <td>${escapeHtml(item.id)}</td>
-          <td>${escapeHtml(item.name)}</td>
-          <td>${escapeHtml(item.location)}</td>
-          <td>${escapeHtml(item.comments)}</td>
-          <td>${escapeHtml(formatDate(item.created_at))}</td>
-        `;
-
-        dataBody.appendChild(row);
-      });
-    }
-
-    function destroyAllCharts() {
-      destroyChart(dashboardChartInstance);
-      destroyChart(locationChartInstance);
-      destroyChart(dateChartInstance);
-      destroyChart(barChartInstance);
-
-      dashboardChartInstance = null;
-      locationChartInstance = null;
-      dateChartInstance = null;
-      barChartInstance = null;
-    }
-
-    function generateChart(data) {
-      destroyChart(dashboardChartInstance);
-
-      const locationCounts = {};
-
-      data.forEach((item) => {
-        const location = item.location || "Unknown";
-        locationCounts[location] = (locationCounts[location] || 0) + 1;
-      });
-
-      dashboardChartInstance = new Chart(document.getElementById("chart"), {
-        type: "bar",
-        data: {
-          labels: Object.keys(locationCounts),
-          datasets: [{
-            label: "Feedback by Location",
-            data: Object.values(locationCounts),
-            backgroundColor: "#16a34a",
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                precision: 0
-              }
-            }
-          }
-        }
-      });
-    }
-
-    function generateReports(data) {
-      destroyChart(locationChartInstance);
-      destroyChart(dateChartInstance);
-      destroyChart(barChartInstance);
-
-      const locationCounts = {};
-      const dateCounts = {};
-
-      data.forEach((item) => {
-        const location = item.location || "Unknown";
-        locationCounts[location] = (locationCounts[location] || 0) + 1;
-
-        let dateKey = "Unknown";
-        if (item.created_at) {
-          const parsedDate = new Date(item.created_at);
-          if (!isNaN(parsedDate.getTime())) {
-            dateKey = parsedDate.toISOString().split("T")[0];
-          }
-        }
-
-        dateCounts[dateKey] = (dateCounts[dateKey] || 0) + 1;
-      });
-
-      locationChartInstance = new Chart(document.getElementById("locationChart"), {
-        type: "pie",
-        data: {
-          labels: Object.keys(locationCounts),
-          datasets: [{
-            label: "حسب الموقع",
-            data: Object.values(locationCounts)
-          }]
-        },
-        options: {
-          responsive: true
-        }
-      });
-
-      dateChartInstance = new Chart(document.getElementById("dateChart"), {
-        type: "line",
-        data: {
-          labels: Object.keys(dateCounts),
-          datasets: [{
-            label: "Daily Feedback",
-            data: Object.values(dateCounts),
-            fill: false,
-            tension: 0.3
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                precision: 0
-              }
-            }
-          }
-        }
-      });
-
-      barChartInstance = new Chart(document.getElementById("barChart"), {
-        type: "bar",
-        data: {
-          labels: Object.keys(locationCounts),
-          datasets: [{
-            label: "Comparison",
-            data: Object.values(locationCounts)
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                precision: 0
-              }
-            }
-          }
-        }
-      });
-    }
-
-    function showPage(pageName, element) {
-      dashboardPage.style.display = "none";
-      feedbackPage.style.display = "none";
-      reportsPage.style.display = "none";
-
-      document.querySelectorAll(".sidebar a").forEach((a) => {
-        a.classList.remove("active");
-      });
-
-      if (element) {
-        element.classList.add("active");
-      }
-
-      if (pageName === "dashboard") dashboardPage.style.display = "block";
-      if (pageName === "feedback") feedbackPage.style.display = "block";
-      if (pageName === "reports") reportsPage.style.display = "block";
-    }
-
-    function toggleLang() {
-      const html = document.documentElement;
-      html.dir = html.dir === "rtl" ? "ltr" : "rtl";
-      document.body.style.direction = html.dir;
-    }
-
-    loadData();
-  </script>
 </body>
 </html>
