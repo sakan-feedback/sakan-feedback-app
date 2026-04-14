@@ -19,15 +19,19 @@ app.get("/", (req, res) => {
 });
 
 // Get all feedback
-app.get("/feedback", async (req, res) => {
+app.get("/feedback/location/:location", async (req, res) => {
   try {
+    const { location } = req.params;
+
     const result = await pool.query(
-      "SELECT * FROM feedback ORDER BY id DESC"
+      "SELECT * FROM feedback WHERE UPPER(location) = UPPER($1) ORDER BY id DESC",
+      [location]
     );
+
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error fetching data");
+    res.status(500).send("Error fetching location data");
   }
 });
 
