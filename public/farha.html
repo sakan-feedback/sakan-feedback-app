@@ -1,213 +1,208 @@
-<!DOCTYPE html>  
-<html lang="ar">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAKAN Feedback</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCED FARHA Feedback Form</title>
 
-<style>
-body {
-  font-family: "Segoe UI", Tahoma;
-  background: #f5f5f5;
-  display: flex;
-  justify-content: center;
-  padding: 30px;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-.container {
-  background: white;
-  width: 600px;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: #f3f4f6;
+      padding: 30px 15px;
+    }
 
-.logo {
-  text-align: center;
-  margin-bottom: 10px;
-}
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 30px 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
 
-.logo img {
-  width: 120px;
-  background: white;
-  padding: 8px;
-  border-radius: 10px;
-}
+    .logo {
+      display: block;
+      width: 120px;
+      margin: 0 auto 20px;
+    }
 
-/* ✅ اسم الموقع */
-.site-name {
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: #16a34a;
-  margin-bottom: 5px;
-}
+    h1, h2, p {
+      text-align: center;
+      margin: 0 0 15px;
+    }
 
-h2 {
-  text-align: center;
-  color: #2b5dab;
-  margin-bottom: 20px;
-}
+    h2 {
+      color: #16a34a;
+      font-size: 24px;
+    }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 10px;
-}
+    p.subtitle {
+      color: #2b5dab;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 25px;
+    }
 
-.required {
-  color: red;
-}
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
 
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+    }
 
-textarea {
-  height: 100px;
-}
+    textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
 
-button {
-  margin-top: 20px;
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(to right, #16a34a, #2b5dab);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-}
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #16a34a, #2563eb);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-button:hover {
-  opacity: 0.9;
-}
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
 
-.lang-switch {
-  text-align: right;
-  margin-bottom: 10px;
-  cursor: pointer;
-  color: #2b5dab;
-}
-</style>
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      text-align: center;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .site-badge {
+      text-align: center;
+      color: #16a34a;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .hidden-field {
+      display: none;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
+    <img class="logo" src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png" alt="SAKAN Logo">
 
-<div class="container">
+    <div class="site-badge">CCED FARHA</div>
+    <p class="subtitle">استمارة الاقتراحات والشكاوى</p>
 
-<div class="lang-switch" onclick="toggleLang()">🌐 EN / AR</div>
+    <form id="feedbackForm">
+      <input type="hidden" id="location" value="CCED FARHA" class="hidden-field">
 
-<div class="logo">
-  <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
-</div>
+      <label for="name">الاسم</label>
+      <input type="text" id="name" placeholder="أدخل الاسم">
 
-<!-- ✅ اسم الموقع -->
-<div class="site-name" id="siteName">CCED – Farha</div>
+      <label for="comments">وصف المشكلة / الاقتراح <span style="color:red">*</span></label>
+      <textarea id="comments" placeholder="اكتب التفاصيل هنا" required></textarea>
 
-<h2 id="title">استمارة الاقتراحات والشكاوي</h2>
+      <button type="submit" id="submitBtn">إرسال</button>
+    </form>
 
-<form onsubmit="send(event)">
+    <div id="successMessage" class="message success">تم إرسال الشكوى بنجاح</div>
+    <div id="errorMessage" class="message error">حدث خطأ أثناء الإرسال</div>
+  </div>
 
-<label id="categoryLabel">1. الفئة <span class="required">*</span></label>
-<select id="category" required>
-  <option value="">اختر مستوى الأهمية</option>
-  <option>منخفض</option>
-  <option>متوسط</option>
-  <option>عالي</option>
-</select>
+  <script>
+    const API = "https://sakan-feedback-app.onrender.com";
 
-<label id="typeLabel">2. نوع المشكلة <span class="required">*</span></label>
-<select id="type" required>
-  <option value="">اختر نوع المشكلة</option>
-  <option>شكوى</option>
-  <option>اقتراح</option>
-</select>
+    const feedbackForm = document.getElementById("feedbackForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const successMessage = document.getElementById("successMessage");
+    const errorMessage = document.getElementById("errorMessage");
 
-<label id="descLabel">3. وصف المشكلة <span class="required">*</span></label>
-<textarea id="comments" placeholder="صف المشكلة بالتفصيل..." required></textarea>
+    function resetMessages() {
+      successMessage.style.display = "none";
+      errorMessage.style.display = "none";
+    }
 
-<label id="locationLabel">الموقع / القسم (اختياري)</label>
-<input id="location" placeholder="أدخل الموقع أو القسم">
+    feedbackForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      resetMessages();
 
-<h3 id="contactTitle">4. معلومات التواصل</h3>
+      const name = document.getElementById("name").value.trim();
+      const location = document.getElementById("location").value.trim();
+      const comments = document.getElementById("comments").value.trim();
 
-<label id="nameLabel">الاسم <span class="required">*</span></label>
-<input id="name" required>
+      if (!comments) {
+        errorMessage.textContent = "يرجى كتابة وصف المشكلة أو الاقتراح";
+        errorMessage.style.display = "block";
+        return;
+      }
 
-<label id="phoneLabel">رقم الهاتف <span class="required">*</span></label>
-<input id="phone" required>
+      submitBtn.disabled = true;
+      submitBtn.textContent = "جاري الإرسال...";
 
-<label id="roomLabel">رقم الغرفة (اختياري)</label>
-<input id="room">
+      try {
+        const res = await fetch(`${API}/feedback`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            location,
+            comments
+          })
+        });
 
-<label id="emailLabel">البريد الإلكتروني (اختياري)</label>
-<input id="email">
+        const result = await res.json();
 
-<label id="empLabel">الرقم الوظيفي (اختياري)</label>
-<input id="emp">
+        if (!res.ok) {
+          throw new Error(result.message || "Failed to submit feedback");
+        }
 
-<button type="submit" id="submitBtn">إرسال البلاغ</button>
+        successMessage.style.display = "block";
+        feedbackForm.reset();
 
-</form>
+        // إعادة تعيين الموقع الثابت بعد reset
+        document.getElementById("location").value = "CCED FARHA";
 
-</div>
-
-<script>
-let isArabic = true;
-
-// ✅ اسم الموقع
-let siteArabic = "CCED – FARHA";
-let siteEnglish = "CCED – FARHA";
-
-function toggleLang() {
-  isArabic = !isArabic;
-
-  if (!isArabic) {
-    document.body.dir = "ltr";
-
-    document.getElementById("siteName").innerText = siteEnglish;
-    title.innerText = "Feedback Form";
-    categoryLabel.innerText = "1. Category *";
-    typeLabel.innerText = "2. Type *";
-    descLabel.innerText = "3. Description *";
-    locationLabel.innerText = "Location / Department (Optional)";
-    contactTitle.innerText = "4. Contact Information";
-    nameLabel.innerText = "Name *";
-    phoneLabel.innerText = "Phone Number *";
-    roomLabel.innerText = "Room Number (Optional)";
-    emailLabel.innerText = "Email (Optional)";
-    empLabel.innerText = "Employee ID (Optional)";
-    submitBtn.innerText = "Send Feedback";
-
-  } else {
-    location.reload();
-  }
-}
-
-// إرسال
-async function send(e) {
-  e.preventDefault();
-
-  await fetch("https://sakan-feedback-app.onrender.com/feedback", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: name.value,
-      location: location.value,
-      comments: comments.value,
-      site: "farha" // 🔥 مهم
-    })
-  });
-
-  alert("تم الإرسال بنجاح ✅");
-  document.querySelector("form").reset();
-}
-</script>
-
+      } catch (error) {
+        console.error(error);
+        errorMessage.textContent = "فشل إرسال البيانات، حاول مرة أخرى";
+        errorMessage.style.display = "block";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "إرسال";
+      }
+    });
+  </script>
 </body>
 </html>
