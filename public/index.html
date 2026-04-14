@@ -161,7 +161,7 @@ button:hover {
 let isArabic = true;
 
 const siteArabic = "استمارة الاقتراحات والشكاوي";
-const siteEnglish = "Suggestions and complaints form";
+const siteEnglish = "";
 
 function toggleLang() {
   isArabic = !isArabic;
@@ -170,7 +170,7 @@ function toggleLang() {
     document.body.dir = "ltr";
 
     document.getElementById("siteName").innerText = siteEnglish;
-    title.innerText = "Feedback Form";
+    title.innerText = "Suggestions and complaints form";
     categoryLabel.innerText = "1. Category *";
     typeLabel.innerText = "2. Type *";
     descLabel.innerText = "3. Description *";
