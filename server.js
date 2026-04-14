@@ -275,4 +275,33 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  app.delete("/feedback/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      "DELETE FROM feedback WHERE id = $1 RETURNING *",
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Feedback not found"
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Feedback deleted successfully",
+      data: result.rows[0]
+    });
+  } catch (error) {
+    console.error("Error deleting feedback:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete feedback"
+    });
+  }
+});
 });
