@@ -1,114 +1,119 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CCED FARHA Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCED FARHA Dashboard</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI";
-      background: #f4f6f9;
-      display: flex;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: "Segoe UI";
+  background: #f4f6f9;
+  display: flex;
+}
 
-    .sidebar {
-      width: 240px;
-      background: #2b5dab;
-      color: white;
-      height: 100vh;
-      padding: 20px;
-    }
+.sidebar {
+  width: 240px;
+  background: #2b5dab;
+  color: white;
+  height: 100vh;
+  padding: 20px;
+}
 
-    .sidebar img {
-      width: 120px;
-      background: white;
-      padding: 8px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-    }
+.sidebar img {
+  width: 120px;
+  background: white;
+  padding: 8px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
 
-    .sidebar a {
-      display: block;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+.sidebar a {
+  display: block;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-    .sidebar a.active,
-    .sidebar a:hover {
-      background: #16a34a;
-    }
+.sidebar a.active,
+.sidebar a:hover {
+  background: #16a34a;
+}
 
-    .main {
-      width: 100%;
-    }
+.main {
+  width: 100%;
+}
 
-    .header {
-      background: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-    }
+.header {
+  background: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+}
 
-    .logout {
-      background: #16a34a;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+.logout {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-    .content {
-      padding: 20px;
-    }
+.export-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-    table {
-      width: 100%;
-      background: white;
-      border-collapse: collapse;
-      border-radius: 12px;
-      overflow: hidden;
-    }
+.content {
+  padding: 20px;
+}
 
-    th {
-      background: #2b5dab;
-      color: white;
-      padding: 12px;
-    }
+table {
+  width: 100%;
+  background: white;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
 
-    td {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      text-align: center;
-    }
+th {
+  background: #2b5dab;
+  color: white;
+  padding: 12px;
+}
 
-    .delete-btn {
-      background: #dc2626;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
 
-    .delete-btn:hover {
-      background: #b91c1c;
-    }
+.delete-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-    .status {
-      background: #d1fae5;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      color: #065f46;
-    }
-  </style>
+.status {
+  background: #d1fae5;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+</style>
 </head>
 
 <body>
@@ -116,21 +121,26 @@
 <div class="sidebar">
   <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
 
-  <a class="active">Dashboard</a>
-  <a>Feedback</a>
+  <a class="active" onclick="showPage('feedback',this)">Feedback</a>
+  <a onclick="showPage('reports',this)">Reports</a>
 </div>
 
 <div class="main">
 
 <div class="header">
   <h2>📊 CCED FARHA Dashboard</h2>
-  <button class="logout" onclick="logout()">Logout</button>
+  <div>
+    <button class="export-btn" onclick="exportExcel()">📥 Excel</button>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
 </div>
 
 <div class="content">
 
 <div id="status" class="status">Loading...</div>
 
+<!-- Feedback -->
+<div id="feedbackPage">
 <table>
   <thead>
     <tr>
@@ -144,6 +154,14 @@
   </thead>
   <tbody id="data"></tbody>
 </table>
+</div>
+
+<!-- Reports -->
+<div id="reportsPage" style="display:none;">
+  <canvas id="locationChart"></canvas>
+  <br><br>
+  <canvas id="dateChart"></canvas>
+</div>
 
 </div>
 </div>
@@ -151,6 +169,7 @@
 <script>
 
 const API = "https://sakan-feedback-app.onrender.com";
+let allData = [];
 
 if(localStorage.getItem("loggedIn") !== "true"){
   window.location.href = "login.html";
@@ -161,14 +180,19 @@ function logout(){
   window.location.href = "login.html";
 }
 
-function formatDate(d){
-  if(!d) return "-";
-  return new Date(d).toLocaleString();
+function showPage(page, el){
+  document.getElementById("feedbackPage").style.display="none";
+  document.getElementById("reportsPage").style.display="none";
+
+  document.querySelectorAll(".sidebar a").forEach(a=>a.classList.remove("active"));
+  el.classList.add("active");
+
+  if(page==="feedback") document.getElementById("feedbackPage").style.display="block";
+  if(page==="reports") document.getElementById("reportsPage").style.display="block";
 }
 
-function escapeHtml(text){
-  if(!text) return "-";
-  return text;
+function formatDate(d){
+  return d ? new Date(d).toLocaleString() : "-";
 }
 
 async function loadData(){
@@ -176,12 +200,15 @@ async function loadData(){
     const res = await fetch(`${API}/feedback`);
     const data = await res.json();
 
+    allData = data;
+
     document.getElementById("status").innerText =
-      `Loaded ${data.length} record(s) successfully`;
+      `Loaded ${data.length} record(s)`;
 
     displayData(data);
+    generateReports(data);
 
-  } catch(e){
+  } catch {
     document.getElementById("status").innerText =
       "❌ Failed to load data";
   }
@@ -195,14 +222,12 @@ function displayData(data){
     table.innerHTML += `
       <tr>
         <td>${item.id}</td>
-        <td>${escapeHtml(item.name)}</td>
-        <td>${escapeHtml(item.location)}</td>
-        <td>${escapeHtml(item.comments)}</td>
+        <td>${item.name || "-"}</td>
+        <td>${item.location || "-"}</td>
+        <td>${item.comments}</td>
         <td>${formatDate(item.created_at)}</td>
         <td>
-          <button class="delete-btn" onclick="deleteRow(${item.id})">
-            Delete
-          </button>
+          <button class="delete-btn" onclick="deleteRow(${item.id})">Delete</button>
         </td>
       </tr>
     `;
@@ -210,26 +235,43 @@ function displayData(data){
 }
 
 async function deleteRow(id){
-  const confirmDelete = confirm("هل تريد حذف هذا السجل؟");
-  if(!confirmDelete) return;
+  if(!confirm("حذف السجل؟")) return;
 
-  try {
-    const res = await fetch(`${API}/feedback/${id}`, {
-      method: "DELETE"
-    });
+  await fetch(`${API}/feedback/${id}`, { method:"DELETE" });
+  loadData();
+}
 
-    const result = await res.json();
+function generateReports(data){
 
-    if(res.ok){
-      alert("تم الحذف بنجاح");
-      loadData();
-    } else {
-      alert(result.message || "خطأ في الحذف");
-    }
+  const loc = {};
+  const dates = {};
 
-  } catch(e){
-    alert("فشل الاتصال بالسيرفر");
-  }
+  data.forEach(i=>{
+    loc[i.location]=(loc[i.location]||0)+1;
+
+    const d = i.created_at?.split("T")[0];
+    dates[d]=(dates[d]||0)+1;
+  });
+
+  new Chart(document.getElementById("locationChart"),{
+    type:"pie",
+    data:{labels:Object.keys(loc),datasets:[{data:Object.values(loc)}]}
+  });
+
+  new Chart(document.getElementById("dateChart"),{
+    type:"line",
+    data:{labels:Object.keys(dates),datasets:[{data:Object.values(dates)}]}
+  });
+}
+
+function exportExcel(){
+
+  const worksheet = XLSX.utils.json_to_sheet(allData);
+  const workbook = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Feedback");
+
+  XLSX.writeFile(workbook, "SAKAN-Feedback.xlsx");
 }
 
 loadData();
