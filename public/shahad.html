@@ -1,213 +1,482 @@
-<!DOCTYPE html>  
-<html lang="ar">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAKAN Feedback - CCED Shahad</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCED SHAHAD Feedback Form</title>
 
-<style>
-body {
-  font-family: "Segoe UI", Tahoma;
-  background: #f5f5f5;
-  display: flex;
-  justify-content: center;
-  padding: 30px;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-.container {
-  background: white;
-  width: 600px;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: #eef1f5;
+      min-height: 100vh;
+      padding: 40px 15px;
+    }
 
-.logo {
-  text-align: center;
-  margin-bottom: 10px;
-}
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 35px 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
 
-.logo img {
-  width: 120px;
-  background: white;
-  padding: 8px;
-  border-radius: 10px;
-}
+    .topbar {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 10px;
+      color: #2563eb;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: 600;
+      user-select: none;
+    }
 
-/* ✅ اسم الموقع */
-.site-name {
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-  color: #16a34a;
-  margin-bottom: 5px;
-}
+    .logo {
+      display: block;
+      width: 120px;
+      margin: 0 auto 18px;
+    }
 
-h2 {
-  text-align: center;
-  color: #2b5dab;
-  margin-bottom: 20px;
-}
+    .site-name {
+      text-align: center;
+      color: #16a34a;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 10px;
-}
+    .title {
+      text-align: center;
+      color: #2b5dab;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
 
-.required {
-  color: red;
-}
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 28px 0 18px;
+      color: #111827;
+    }
 
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
+    .field {
+      margin-bottom: 18px;
+    }
 
-textarea {
-  height: 100px;
-}
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+    }
 
-button {
-  margin-top: 20px;
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(to right, #16a34a, #2b5dab);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-}
+    .required {
+      color: #dc2626;
+    }
 
-button:hover {
-  opacity: 0.9;
-}
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 16px;
+      font-family: inherit;
+      background: #fff;
+      outline: none;
+      transition: 0.2s ease;
+    }
 
-.lang-switch {
-  text-align: right;
-  margin-bottom: 10px;
-  cursor: pointer;
-  color: #2b5dab;
-}
-</style>
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #2b5dab;
+      box-shadow: 0 0 0 3px rgba(43, 93, 171, 0.12);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      background: linear-gradient(90deg, #16a34a, #2563eb);
+      margin-top: 10px;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 10px;
+      display: none;
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .hidden-field {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 24px 18px;
+      }
+
+      .title {
+        font-size: 24px;
+      }
+
+      .site-name {
+        font-size: 22px;
+      }
+
+      label {
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="container">
+  <div class="container">
+    <div class="topbar" onclick="toggleLanguage()">🌐 <span id="langToggle">EN / AR</span></div>
 
-<div class="lang-switch" onclick="toggleLang()">🌐 EN / AR</div>
+    <img
+      class="logo"
+      src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png"
+      alt="SAKAN Logo"
+    >
 
-<div class="logo">
-  <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
-</div>
+    <div class="site-name">CCED SHAHAD</div>
+    <div class="title" id="formTitle">استمارة الاقتراحات والشكاوى</div>
 
-<!-- ✅ اسم الموقع -->
-<div class="site-name" id="siteName">CCED – Shahad</div>
+    <form id="feedbackForm">
+      <input type="hidden" id="location" value="CCED SHAHAD" class="hidden-field">
 
-<h2 id="title">استمارة الاقتراحات والشكاوي</h2>
+      <div class="field">
+        <label for="priority" id="labelPriority">1. الفئة <span class="required">*</span></label>
+        <select id="priority" required>
+          <option value="" id="optPriorityDefault">اختر مستوى الأهمية</option>
+          <option value="Low" id="optPriorityLow">منخفض</option>
+          <option value="Medium" id="optPriorityMedium">متوسط</option>
+          <option value="High" id="optPriorityHigh">عالي</option>
+        </select>
+      </div>
 
-<form onsubmit="send(event)">
+      <div class="field">
+        <label for="issueType" id="labelIssueType">2. نوع المشكلة <span class="required">*</span></label>
+        <select id="issueType" required>
+          <option value="" id="optIssueDefault">اختر نوع المشكلة</option>
+          <option value="Housekeeping">Housekeeping</option>
+          <option value="Maintenance">Maintenance</option>
+          <option value="Catering">Catering</option>
+          <option value="Laundry">Laundry</option>
+          <option value="Other" id="optIssueOther">Other</option>
+        </select>
+      </div>
 
-<label id="categoryLabel">1. الفئة <span class="required">*</span></label>
-<select id="category" required>
-  <option value="">اختر مستوى الأهمية</option>
-  <option>منخفض</option>
-  <option>متوسط</option>
-  <option>عالي</option>
-</select>
+      <div class="field">
+        <label for="comments" id="labelComments">3. وصف المشكلة <span class="required">*</span></label>
+        <textarea id="comments" placeholder="اكتب التفاصيل هنا" required></textarea>
+      </div>
 
-<label id="typeLabel">2. نوع المشكلة <span class="required">*</span></label>
-<select id="type" required>
-  <option value="">اختر نوع المشكلة</option>
-  <option>شكوى</option>
-  <option>اقتراح</option>
-</select>
+      <div class="field">
+        <label for="department" id="labelDepartment">الموقع / القسم (اختياري)</label>
+        <input type="text" id="department" placeholder="مثال: المبنى A أو المطبخ أو السكن">
+      </div>
 
-<label id="descLabel">3. وصف المشكلة <span class="required">*</span></label>
-<textarea id="comments" placeholder="صف المشكلة بالتفصيل..." required></textarea>
+      <div class="section-title" id="contactTitle">4. معلومات التواصل</div>
 
-<label id="locationLabel">الموقع / القسم (اختياري)</label>
-<input id="location" placeholder="أدخل الموقع أو القسم">
+      <div class="field">
+        <label for="name" id="labelName">الاسم <span class="required">*</span></label>
+        <input type="text" id="name" placeholder="أدخل الاسم" required>
+      </div>
 
-<h3 id="contactTitle">4. معلومات التواصل</h3>
+      <div class="field">
+        <label for="phone" id="labelPhone">رقم الهاتف <span class="required">*</span></label>
+        <input type="text" id="phone" placeholder="أدخل رقم الهاتف" required>
+      </div>
 
-<label id="nameLabel">الاسم <span class="required">*</span></label>
-<input id="name" required>
+      <div class="field">
+        <label for="roomNo" id="labelRoomNo">رقم الغرفة (اختياري)</label>
+        <input type="text" id="roomNo" placeholder="أدخل رقم الغرفة">
+      </div>
 
-<label id="phoneLabel">رقم الهاتف <span class="required">*</span></label>
-<input id="phone" required>
+      <div class="field">
+        <label for="email" id="labelEmail">البريد الإلكتروني (اختياري)</label>
+        <input type="email" id="email" placeholder="أدخل البريد الإلكتروني">
+      </div>
 
-<label id="roomLabel">رقم الغرفة (اختياري)</label>
-<input id="room">
+      <div class="field">
+        <label for="employeeNo" id="labelEmployeeNo">الرقم الوظيفي (اختياري)</label>
+        <input type="text" id="employeeNo" placeholder="أدخل الرقم الوظيفي">
+      </div>
 
-<label id="emailLabel">البريد الإلكتروني (اختياري)</label>
-<input id="email">
+      <button type="submit" id="submitBtn" class="submit-btn">إرسال البلاغ</button>
+    </form>
 
-<label id="empLabel">الرقم الوظيفي (اختياري)</label>
-<input id="emp">
+    <div id="successMessage" class="message success">تم إرسال البلاغ بنجاح</div>
+    <div id="errorMessage" class="message error">حدث خطأ أثناء الإرسال</div>
+  </div>
 
-<button type="submit" id="submitBtn">إرسال البلاغ</button>
+  <script>
+    const API = "https://sakan-feedback-app.onrender.com";
 
-</form>
+    const feedbackForm = document.getElementById("feedbackForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const successMessage = document.getElementById("successMessage");
+    const errorMessage = document.getElementById("errorMessage");
 
-</div>
+    let currentLang = "ar";
 
-<script>
-let isArabic = true;
+    const translations = {
+      ar: {
+        formTitle: "استمارة الاقتراحات والشكاوى",
+        labelPriority: '1. الفئة <span class="required">*</span>',
+        optPriorityDefault: "اختر مستوى الأهمية",
+        optPriorityLow: "منخفض",
+        optPriorityMedium: "متوسط",
+        optPriorityHigh: "عالي",
 
-// ✅ اسم الموقع
-let siteArabic = "CCED – Shahad";
-let siteEnglish = "CCED – Shahad";
+        labelIssueType: '2. نوع المشكلة <span class="required">*</span>',
+        optIssueDefault: "اختر نوع المشكلة",
+        optIssueOther: "أخرى",
 
-function toggleLang() {
-  isArabic = !isArabic;
+        labelComments: '3. وصف المشكلة <span class="required">*</span>',
+        commentsPlaceholder: "اكتب التفاصيل هنا",
 
-  if (!isArabic) {
-    document.body.dir = "ltr";
+        labelDepartment: "الموقع / القسم (اختياري)",
+        departmentPlaceholder: "مثال: المبنى A أو المطبخ أو السكن",
 
-    document.getElementById("siteName").innerText = siteEnglish;
-    title.innerText = "Feedback Form";
-    categoryLabel.innerText = "1. Category *";
-    typeLabel.innerText = "2. Type *";
-    descLabel.innerText = "3. Description *";
-    locationLabel.innerText = "Location / Department (Optional)";
-    contactTitle.innerText = "4. Contact Information";
-    nameLabel.innerText = "Name *";
-    phoneLabel.innerText = "Phone Number *";
-    roomLabel.innerText = "Room Number (Optional)";
-    emailLabel.innerText = "Email (Optional)";
-    empLabel.innerText = "Employee ID (Optional)";
-    submitBtn.innerText = "Send Feedback";
+        contactTitle: "4. معلومات التواصل",
 
-  } else {
-    location.reload();
-  }
-}
+        labelName: 'الاسم <span class="required">*</span>',
+        namePlaceholder: "أدخل الاسم",
 
-// إرسال
-async function send(e) {
-  e.preventDefault();
+        labelPhone: 'رقم الهاتف <span class="required">*</span>',
+        phonePlaceholder: "أدخل رقم الهاتف",
 
-  await fetch("https://sakan-feedback-app.onrender.com/feedback", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      name: name.value,
-      location: location.value,
-      comments: comments.value,
-      site: siteArabic // ✅ مهم
-    })
-  });
+        labelRoomNo: "رقم الغرفة (اختياري)",
+        roomNoPlaceholder: "أدخل رقم الغرفة",
 
-  alert("تم الإرسال بنجاح ✅");
-  document.querySelector("form").reset();
-}
-</script>
+        labelEmail: "البريد الإلكتروني (اختياري)",
+        emailPlaceholder: "أدخل البريد الإلكتروني",
 
+        labelEmployeeNo: "الرقم الوظيفي (اختياري)",
+        employeeNoPlaceholder: "أدخل الرقم الوظيفي",
+
+        submitBtn: "إرسال البلاغ",
+        submitting: "جاري الإرسال...",
+        successMessage: "تم إرسال البلاغ بنجاح",
+        errorMessage: "حدث خطأ أثناء الإرسال",
+        requiredError: "يرجى تعبئة جميع الحقول المطلوبة",
+        failedSubmit: "فشل إرسال البيانات، حاول مرة أخرى",
+        langToggle: "EN / AR"
+      },
+      en: {
+        formTitle: "Suggestions and Complaints Form",
+        labelPriority: '1. Priority <span class="required">*</span>',
+        optPriorityDefault: "Select priority level",
+        optPriorityLow: "Low",
+        optPriorityMedium: "Medium",
+        optPriorityHigh: "High",
+
+        labelIssueType: '2. Issue Type <span class="required">*</span>',
+        optIssueDefault: "Select issue type",
+        optIssueOther: "Other",
+
+        labelComments: '3. Issue Description <span class="required">*</span>',
+        commentsPlaceholder: "Write the details here",
+
+        labelDepartment: "Location / Department (Optional)",
+        departmentPlaceholder: "Example: Building A, kitchen, or accommodation",
+
+        contactTitle: "4. Contact Information",
+
+        labelName: 'Name <span class="required">*</span>',
+        namePlaceholder: "Enter name",
+
+        labelPhone: 'Phone Number <span class="required">*</span>',
+        phonePlaceholder: "Enter phone number",
+
+        labelRoomNo: "Room Number (Optional)",
+        roomNoPlaceholder: "Enter room number",
+
+        labelEmail: "Email (Optional)",
+        emailPlaceholder: "Enter email address",
+
+        labelEmployeeNo: "Employee Number (Optional)",
+        employeeNoPlaceholder: "Enter employee number",
+
+        submitBtn: "Submit Report",
+        submitting: "Submitting...",
+        successMessage: "Report submitted successfully",
+        errorMessage: "An error occurred during submission",
+        requiredError: "Please fill in all required fields",
+        failedSubmit: "Failed to submit data. Please try again.",
+        langToggle: "AR / EN"
+      }
+    };
+
+    function applyLanguage(lang) {
+      const t = translations[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+      currentLang = lang;
+
+      document.getElementById("formTitle").innerHTML = t.formTitle;
+      document.getElementById("labelPriority").innerHTML = t.labelPriority;
+      document.getElementById("optPriorityDefault").textContent = t.optPriorityDefault;
+      document.getElementById("optPriorityLow").textContent = t.optPriorityLow;
+      document.getElementById("optPriorityMedium").textContent = t.optPriorityMedium;
+      document.getElementById("optPriorityHigh").textContent = t.optPriorityHigh;
+
+      document.getElementById("labelIssueType").innerHTML = t.labelIssueType;
+      document.getElementById("optIssueDefault").textContent = t.optIssueDefault;
+      document.getElementById("optIssueOther").textContent = t.optIssueOther;
+
+      document.getElementById("labelComments").innerHTML = t.labelComments;
+      document.getElementById("comments").placeholder = t.commentsPlaceholder;
+
+      document.getElementById("labelDepartment").textContent = t.labelDepartment;
+      document.getElementById("department").placeholder = t.departmentPlaceholder;
+
+      document.getElementById("contactTitle").textContent = t.contactTitle;
+
+      document.getElementById("labelName").innerHTML = t.labelName;
+      document.getElementById("name").placeholder = t.namePlaceholder;
+
+      document.getElementById("labelPhone").innerHTML = t.labelPhone;
+      document.getElementById("phone").placeholder = t.phonePlaceholder;
+
+      document.getElementById("labelRoomNo").textContent = t.labelRoomNo;
+      document.getElementById("roomNo").placeholder = t.roomNoPlaceholder;
+
+      document.getElementById("labelEmail").textContent = t.labelEmail;
+      document.getElementById("email").placeholder = t.emailPlaceholder;
+
+      document.getElementById("labelEmployeeNo").textContent = t.labelEmployeeNo;
+      document.getElementById("employeeNo").placeholder = t.employeeNoPlaceholder;
+
+      if (!submitBtn.disabled) {
+        submitBtn.textContent = t.submitBtn;
+      }
+
+      document.getElementById("successMessage").textContent = t.successMessage;
+      document.getElementById("errorMessage").textContent = t.errorMessage;
+      document.getElementById("langToggle").textContent = t.langToggle;
+    }
+
+    function toggleLanguage() {
+      applyLanguage(currentLang === "ar" ? "en" : "ar");
+    }
+
+    function resetMessages() {
+      successMessage.style.display = "none";
+      errorMessage.style.display = "none";
+    }
+
+    feedbackForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      resetMessages();
+
+      const t = translations[currentLang];
+
+      const payload = {
+        location: "CCED SHAHAD",
+        priority: document.getElementById("priority").value,
+        issueType: document.getElementById("issueType").value,
+        comments: document.getElementById("comments").value.trim(),
+        department: document.getElementById("department").value.trim(),
+        name: document.getElementById("name").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        roomNo: document.getElementById("roomNo").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        employeeNo: document.getElementById("employeeNo").value.trim()
+      };
+
+      if (!payload.priority || !payload.issueType || !payload.comments || !payload.name || !payload.phone) {
+        errorMessage.textContent = t.requiredError;
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = t.submitting;
+
+      try {
+        const res = await fetch(`${API}/feedback`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: payload.name,
+            location: payload.location,
+            comments: payload.comments,
+            category: payload.issueType,
+            rating: payload.priority,
+            phone: payload.phone,
+            email: payload.email,
+            room_no: payload.roomNo,
+            employee_no: payload.employeeNo,
+            department: payload.department
+          })
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          throw new Error(result.message || "Failed to submit feedback");
+        }
+
+        successMessage.textContent = t.successMessage;
+        successMessage.style.display = "block";
+        feedbackForm.reset();
+      } catch (error) {
+        console.error(error);
+        errorMessage.textContent = t.failedSubmit;
+        errorMessage.style.display = "block";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = t.submitBtn;
+      }
+    });
+
+    applyLanguage("ar");
+  </script>
 </body>
 </html>
