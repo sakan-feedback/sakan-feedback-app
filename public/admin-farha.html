@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCED FARHA Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI";
+      background: #f4f6f9;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: #2b5dab;
+      color: white;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .sidebar img {
+      width: 120px;
+      background: white;
+      padding: 8px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .sidebar a.active,
+    .sidebar a:hover {
+      background: #16a34a;
+    }
+
+    .main {
+      width: 100%;
+    }
+
+    .header {
+      background: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .logout {
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      background: white;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #2b5dab;
+      color: white;
+      padding: 12px;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+
+    .delete-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background: #b91c1c;
+    }
+
+    .status {
+      background: #d1fae5;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      color: #065f46;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
+
+  <a class="active">Dashboard</a>
+  <a>Feedback</a>
+</div>
+
+<div class="main">
+
+<div class="header">
+  <h2>📊 CCED FARHA Dashboard</h2>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<div class="content">
+
+<div id="status" class="status">Loading...</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>الاسم</th>
+      <th>الموقع</th>
+      <th>التعليق</th>
+      <th>التاريخ</th>
+      <th>حذف</th>
+    </tr>
+  </thead>
+  <tbody id="data"></tbody>
+</table>
+
+</div>
+</div>
+
+<script>
+
+const API = "https://sakan-feedback-app.onrender.com";
+
+if(localStorage.getItem("loggedIn") !== "true"){
+  window.location.href = "login.html";
+}
+
+function logout(){
+  localStorage.removeItem("loggedIn");
+  window.location.href = "login.html";
+}
+
+function formatDate(d){
+  if(!d) return "-";
+  return new Date(d).toLocaleString();
+}
+
+function escapeHtml(text){
+  if(!text) return "-";
+  return text;
+}
+
+async function loadData(){
+  try {
+    const res = await fetch(`${API}/feedback`);
+    const data = await res.json();
+
+    document.getElementById("status").innerText =
+      `Loaded ${data.length} record(s) successfully`;
+
+    displayData(data);
+
+  } catch(e){
+    document.getElementById("status").innerText =
+      "❌ Failed to load data";
+  }
+}
+
+function displayData(data){
+  const table = document.getElementById("data");
+  table.innerHTML = "";
+
+  data.forEach(item => {
+    table.innerHTML += `
+      <tr>
+        <td>${item.id}</td>
+        <td>${escapeHtml(item.name)}</td>
+        <td>${escapeHtml(item.location)}</td>
+        <td>${escapeHtml(item.comments)}</td>
+        <td>${formatDate(item.created_at)}</td>
+        <td>
+          <button class="delete-btn" onclick="deleteRow(${item.id})">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+async function deleteRow(id){
+  const confirmDelete = confirm("هل تريد حذف هذا السجل؟");
+  if(!confirmDelete) return;
+
+  try {
+    const res = await fetch(`${API}/feedback/${id}`, {
+      method: "DELETE"
+    });
+
+    const result = await res.json();
+
+    if(res.ok){
+      alert("تم الحذف بنجاح");
+      loadData();
+    } else {
+      alert(result.message || "خطأ في الحذف");
+    }
+
+  } catch(e){
+    alert("فشل الاتصال بالسيرفر");
+  }
+}
+
+loadData();
+
+</script>
+
+</body>
+</html>
