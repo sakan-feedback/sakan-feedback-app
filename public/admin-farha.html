@@ -1,304 +1,451 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CCED FARHA Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCED FARHA Dashboard</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
-<style>
-body {
-  margin: 0;
-  font-family: "Segoe UI";
-  background: #f4f6f9;
-  display: flex;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-.sidebar {
-  width: 240px;
-  background: #2b5dab;
-  color: white;
-  height: 100vh;
-  padding: 20px;
-}
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      color: #1f2937;
+    }
 
-.sidebar img {
-  width: 120px;
-  background: white;
-  padding: 8px;
-  border-radius: 10px;
-  margin-bottom: 30px;
-}
+    .sidebar {
+      width: 240px;
+      background: #2b5dab;
+      color: white;
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-.sidebar a {
-  display: block;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-}
+    .sidebar img {
+      width: 120px;
+      background: white;
+      padding: 8px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      display: block;
+    }
 
-.sidebar a.active,
-.sidebar a:hover {
-  background: #16a34a;
-}
+    .sidebar a {
+      display: block;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+    }
 
-.main {
-  width: 100%;
-}
+    .sidebar a.active,
+    .sidebar a:hover {
+      background: #16a34a;
+    }
 
-.header {
-  background: white;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-}
+    .main {
+      width: 100%;
+    }
 
-.logout {
-  background: #16a34a;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-}
+    .header {
+      background: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid #e5e7eb;
+    }
 
-.export-btn {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-}
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
 
-.content {
-  padding: 20px;
-}
+    .logout,
+    .export-btn {
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
-table {
-  width: 100%;
-  background: white;
-  border-collapse: collapse;
-  border-radius: 12px;
-  overflow: hidden;
-}
+    .logout {
+      background: #16a34a;
+    }
 
-th {
-  background: #2b5dab;
-  color: white;
-  padding: 12px;
-}
+    .export-btn {
+      background: #2563eb;
+    }
 
-td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-}
+    .content {
+      padding: 20px;
+    }
 
-.delete-btn {
-  background: #dc2626;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
+    .status {
+      background: #d1fae5;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      color: #065f46;
+    }
 
-.status {
-  background: #d1fae5;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-}
-</style>
+    .cards {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      flex: 1;
+      min-width: 250px;
+      background: white;
+      padding: 18px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .table-wrap {
+      background: white;
+      border-radius: 12px;
+      overflow-x: auto;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th {
+      background: #2b5dab;
+      color: white;
+      padding: 12px;
+      text-align: center;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+      vertical-align: top;
+    }
+
+    .delete-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .chart-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .empty {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      color: #6b7280;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    @media (max-width: 900px) {
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        min-height: auto;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="sidebar">
-  <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
+  <div class="sidebar">
+    <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png" alt="SAKAN Logo">
 
-  <a class="active" onclick="showPage('feedback',this)">Feedback</a>
-  <a onclick="showPage('reports',this)">Reports</a>
-</div>
-
-<div class="main">
-
-<div class="header">
-  <h2>📊 CCED FARHA Dashboard</h2>
-  <div>
-    <button class="export-btn" onclick="exportExcel()">📥 Excel</button>
-    <button class="logout" onclick="logout()">Logout</button>
+    <a class="active" onclick="showPage('dashboard', this)">Dashboard</a>
+    <a onclick="showPage('feedback', this)">Feedback</a>
+    <a onclick="showPage('reports', this)">Reports</a>
   </div>
-</div>
 
-<div class="content">
+  <div class="main">
+    <div class="header">
+      <h2>📊 CCED FARHA Dashboard</h2>
 
-<div id="status" class="status">Loading...</div>
+      <div class="header-actions">
+        <button class="export-btn" onclick="exportExcel()">📥 Excel</button>
+        <button class="logout" onclick="logout()">Logout</button>
+      </div>
+    </div>
 
-<!-- Feedback -->
-<div id="feedbackPage">
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>الاسم</th>
-      <th>الموقع</th>
-      <th>التعليق</th>
-      <th>التاريخ</th>
-      <th>حذف</th>
-    </tr>
-  </thead>
-  <tbody id="data"></tbody>
-</table>
-</div>
+    <div class="content">
+      <div id="status" class="status">Loading...</div>
 
-<!-- Reports -->
-<div id="reportsPage" style="display:none;">
-  <canvas id="locationChart"></canvas>
-  <br><br>
-  <canvas id="dateChart"></canvas>
-</div>
+      <!-- Dashboard -->
+      <div id="dashboardPage">
+        <div class="cards">
+          <div class="card">
+            <h3>عدد السجلات</h3>
+            <p id="totalCount">0</p>
+          </div>
+          <div class="card">
+            <h3>آخر تاريخ</h3>
+            <p id="lastDate">-</p>
+          </div>
+        </div>
 
-</div>
-</div>
+        <div class="chart-card">
+          <h3>البلاغات حسب اليوم</h3>
+          <canvas id="dashboardChart"></canvas>
+        </div>
+      </div>
 
-<script>
+      <!-- Feedback -->
+      <div id="feedbackPage" style="display:none;">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>الاسم</th>
+                <th>الموقع</th>
+                <th>التعليق</th>
+                <th>التاريخ</th>
+                <th>حذف</th>
+              </tr>
+            </thead>
+            <tbody id="data"></tbody>
+          </table>
+        </div>
+        <div id="emptyMessage" class="empty" style="display:none; margin-top:15px;">
+          لا توجد سجلات خاصة بـ CCED FARHA حالياً
+        </div>
+      </div>
 
-const API = "https://sakan-feedback-app.onrender.com";
-let allData = [];
+      <!-- Reports -->
+      <div id="reportsPage" style="display:none;">
+        <div class="chart-card">
+          <h3>تقرير يومي</h3>
+          <canvas id="dateChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
 
-if(localStorage.getItem("loggedIn") !== "true"){
-  window.location.href = "login.html";
-}
+  <script>
+    const API = "https://sakan-feedback-app.onrender.com";
+    const SITE_NAME = "CCED FARHA";
+    let allData = [];
+    let dashboardChartInstance = null;
+    let dateChartInstance = null;
 
-function logout(){
-  localStorage.removeItem("loggedIn");
-  window.location.href = "login.html";
-}
+    if (localStorage.getItem("loggedIn") !== "true") {
+      window.location.href = "login.html";
+    }
 
-function showPage(page, el){
-  document.getElementById("feedbackPage").style.display="none";
-  document.getElementById("reportsPage").style.display="none";
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "login.html";
+    }
 
-  document.querySelectorAll(".sidebar a").forEach(a=>a.classList.remove("active"));
-  el.classList.add("active");
+    function showPage(page, el) {
+      document.getElementById("dashboardPage").style.display = "none";
+      document.getElementById("feedbackPage").style.display = "none";
+      document.getElementById("reportsPage").style.display = "none";
 
-  if(page==="feedback") document.getElementById("feedbackPage").style.display="block";
-  if(page==="reports") document.getElementById("reportsPage").style.display="block";
-}
+      document.querySelectorAll(".sidebar a").forEach(a => a.classList.remove("active"));
+      el.classList.add("active");
 
-function formatDate(d){
-  return d ? new Date(d).toLocaleString() : "-";
-}
+      if (page === "dashboard") document.getElementById("dashboardPage").style.display = "block";
+      if (page === "feedback") document.getElementById("feedbackPage").style.display = "block";
+      if (page === "reports") document.getElementById("reportsPage").style.display = "block";
+    }
 
-async function loadData(){
-  try {
-    const res = await fetch(`${API}/feedback`);
-    const data = await res.json();
+    function formatDate(d) {
+      return d ? new Date(d).toLocaleString() : "-";
+    }
 
-    allData = data;
+    function escapeHtml(text) {
+      if (text === null || text === undefined || text === "") return "-";
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
-    document.getElementById("status").innerText =
-      `Loaded ${data.length} record(s)`;
+    async function loadData() {
+      try {
+        const res = await fetch(`${API}/feedback/location/${encodeURIComponent(SITE_NAME)}`);
+        const data = await res.json();
 
-    displayData(data);
-    generateReports(data);
+        allData = Array.isArray(data) ? data : [];
 
-  } catch {
-    document.getElementById("status").innerText =
-      "❌ Failed to load data";
-  }
-}
+        document.getElementById("status").innerText =
+          `Loaded ${allData.length} record(s) successfully for ${SITE_NAME}`;
 
-function displayData(data){
-  const table = document.getElementById("data");
-  table.innerHTML = "";
+        document.getElementById("totalCount").innerText = allData.length;
+        document.getElementById("lastDate").innerText = allData.length ? formatDate(allData[0].created_at) : "-";
 
-  data.forEach(item => {
-    table.innerHTML += `
-      <tr>
-        <td>${item.id}</td>
-        <td>${item.name || "-"}</td>
-        <td>${item.location || "-"}</td>
-        <td>${item.comments}</td>
-        <td>${formatDate(item.created_at)}</td>
-        <td>
-          <button class="delete-btn" onclick="deleteRow(${item.id})">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
-}
+        displayData(allData);
+        generateReports(allData);
+      } catch (e) {
+        console.error(e);
+        document.getElementById("status").innerText = "❌ Failed to load data";
+      }
+    }
 
-async function deleteRow(id){
-  if(!confirm("حذف السجل؟")) return;
+    function displayData(data) {
+      const table = document.getElementById("data");
+      const emptyMessage = document.getElementById("emptyMessage");
+      table.innerHTML = "";
 
-  await fetch(`${API}/feedback/${id}`, { method:"DELETE" });
-  loadData();
-}
+      if (!data.length) {
+        emptyMessage.style.display = "block";
+        return;
+      }
 
-function generateReports(data){
+      emptyMessage.style.display = "none";
 
-  const loc = {};
-  const dates = {};
+      data.forEach(item => {
+        table.innerHTML += `
+          <tr>
+            <td>${item.id}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.location)}</td>
+            <td>${escapeHtml(item.comments)}</td>
+            <td>${formatDate(item.created_at)}</td>
+            <td>
+              <button class="delete-btn" onclick="deleteRow(${item.id})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
 
-  data.forEach(i=>{
-    loc[i.location]=(loc[i.location]||0)+1;
+    async function deleteRow(id) {
+      if (!confirm("هل تريد حذف هذا السجل؟")) return;
 
-    const d = i.created_at?.split("T")[0];
-    dates[d]=(dates[d]||0)+1;
-  });
+      try {
+        const res = await fetch(`${API}/feedback/${id}`, {
+          method: "DELETE"
+        });
 
-  new Chart(document.getElementById("locationChart"),{
-    type:"pie",
-    data:{labels:Object.keys(loc),datasets:[{data:Object.values(loc)}]}
-  });
+        const result = await res.json();
 
-  new Chart(document.getElementById("dateChart"),{
-    type:"line",
-    data:{labels:Object.keys(dates),datasets:[{data:Object.values(dates)}]}
-  });
-}
+        if (res.ok) {
+          alert("تم الحذف بنجاح");
+          loadData();
+        } else {
+          alert(result.message || "خطأ في الحذف");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("فشل الاتصال بالسيرفر");
+      }
+    }
 
-function exportExcel(){
+    function destroyCharts() {
+      if (dashboardChartInstance) dashboardChartInstance.destroy();
+      if (dateChartInstance) dateChartInstance.destroy();
+    }
 
-  const worksheet = XLSX.utils.json_to_sheet(allData);
-  const workbook = XLSX.utils.book_new();
+    function generateReports(data) {
+      destroyCharts();
 
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Feedback");
+      const dates = {};
+      data.forEach(item => {
+        const key = item.created_at ? new Date(item.created_at).toISOString().split("T")[0] : "Unknown";
+        dates[key] = (dates[key] || 0) + 1;
+      });
 
-  XLSX.writeFile(workbook, "SAKAN-Feedback.xlsx");
-}
+      dashboardChartInstance = new Chart(document.getElementById("dashboardChart"), {
+        type: "bar",
+        data: {
+          labels: Object.keys(dates),
+          datasets: [{
+            label: "بلاغات CCED FARHA",
+            data: Object.values(dates)
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0 }
+            }
+          }
+        }
+      });
 
-<script>
-const API = "https://sakan-feedback-app.onrender.com";
-const SITE_NAME = "CCED FARHA";
+      dateChartInstance = new Chart(document.getElementById("dateChart"), {
+        type: "line",
+        data: {
+          labels: Object.keys(dates),
+          datasets: [{
+            label: "التقرير اليومي",
+            data: Object.values(dates),
+            fill: false,
+            tension: 0.25
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0 }
+            }
+          }
+        }
+      });
+    }
 
-async function loadData(){
-  try {
-    const res = await fetch(`${API}/feedback`);
-    const data = await res.json();
+    function exportExcel() {
+      const exportData = allData.map(item => ({
+        ID: item.id,
+        Name: item.name || "-",
+        Location: item.location || "-",
+        Comments: item.comments || "-",
+        Date: formatDate(item.created_at)
+      }));
 
-    const filteredData = data.filter(item =>
-      (item.location || "").trim().toUpperCase() === SITE_NAME
-    );
+      const worksheet = XLSX.utils.json_to_sheet(exportData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "CCED_FARHA");
+      XLSX.writeFile(workbook, "CCED-FARHA-Feedback.xlsx");
+    }
 
-    document.getElementById("status").innerText =
-      `Loaded ${filteredData.length} record(s) successfully`;
-
-    displayData(filteredData);
-
-  } catch(e){
-    document.getElementById("status").innerText = "❌ Failed to load data";
-  }
-}
-</script>
-
-</script>
-
+    loadData();
+  </script>
 </body>
 </html>
