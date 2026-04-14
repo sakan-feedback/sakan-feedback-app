@@ -34,7 +34,6 @@ body {
   border-radius: 10px;
 }
 
-/* اسم الموقع */
 .site-name {
   text-align: center;
   font-size: 18px;
@@ -65,6 +64,7 @@ input, select, textarea {
   margin-top: 5px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 textarea {
@@ -106,7 +106,6 @@ button:hover {
   <img src="https://sakanoman.om/files/images/a8f7324ee2d9956f2f1e44022b4d2cda.png">
 </div>
 
-<!-- اسم الموقع -->
 <div class="site-name" id="siteName">PDO YIBAL MOTEL</div>
 
 <h2 id="title">استمارة الاقتراحات والشكاوي</h2>
@@ -182,34 +181,11 @@ function toggleLang() {
     emailLabel.innerText = "Email (Optional)";
     empLabel.innerText = "Employee ID (Optional)";
     submitBtn.innerText = "Send Feedback";
-
   } else {
     location.reload();
   }
 }
 
-// إرسال البيانات
-async function send(e) {
-  e.preventDefault();
-
-  const data = {
-    name: name.value,
-    location: location.value,
-    comments: comments.value,
-    site: siteArabic // مهم جداً
-  };
-
-  await fetch("https://sakan-feedback-app.onrender.com/feedback", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
-
-  alert("تم الإرسال بنجاح ✅");
-  document.querySelector("form").reset();
-}
-</script>
-<script>
 async function send(e) {
   e.preventDefault();
 
@@ -228,5 +204,6 @@ async function send(e) {
   document.querySelector("form").reset();
 }
 </script>
+
 </body>
 </html>
